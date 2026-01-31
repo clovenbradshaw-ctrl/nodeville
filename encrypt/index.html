@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Encrypted Chat - NODEVILLE</title>
+  <meta name="description" content="Create private encrypted conversations on the mesh network.">
+  <meta name="theme-color" content="#E85D04">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <main class="container">
+    <a href="/" class="back-link">← Back to home</a>
+
+    <div class="page-header">
+      <span class="icon">🔐</span>
+      <h1>Create Encrypted Conversations</h1>
+      <p class="subtitle">Signal-style privacy on the mesh</p>
+    </div>
+
+    <p>
+      The public channel is like a group chat — everyone sees everything.
+    </p>
+    <p>
+      For private conversations, you create additional channels with unique
+      encryption keys. Only people with the same key can read messages.
+    </p>
+    <p>
+      <strong>Each private channel = one conversation</strong> (1-on-1 or group)
+    </p>
+
+    <div class="channel-diagram">
+<pre>┌─────────────────────────────────────────┐
+│ <span class="highlight">Channel 0:</span> Public Nashville mesh       │  ← Everyone
+├─────────────────────────────────────────┤
+│ <span class="highlight">Channel 1:</span> "Alex" (your key)           │  ← Just you &amp; Alex
+├─────────────────────────────────────────┤
+│ <span class="highlight">Channel 2:</span> "Family" (your key)         │  ← Just your family
+├─────────────────────────────────────────┤
+│ <span class="highlight">Channel 3:</span> "Work crew" (your key)      │  ← Just your team
+└─────────────────────────────────────────┘</pre>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <h2>Create a Private Channel</h2>
+
+    <div class="instructions">
+      <ol>
+        <li>Open Meshtastic app</li>
+        <li>Go to <code>Settings → Channels</code></li>
+        <li>Tap <strong>"+ Add Channel"</strong></li>
+        <li>Enter a name (e.g., "Alex" or "Family")</li>
+        <li>Tap <strong>PSK → Select "Random"</strong> (generates 256-bit key)</li>
+        <li>Tap <strong>Save</strong></li>
+        <li>Device will reboot</li>
+      </ol>
+    </div>
+
+    <h2>Share With Your Contact</h2>
+
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Channels</code></li>
+        <li>Tap your new channel</li>
+        <li>Tap <strong>"Share"</strong> or the QR icon</li>
+        <li>Have your contact scan the QR code</li>
+        <li>They choose <strong>"Add Channel"</strong> (not replace!)</li>
+      </ol>
+    </div>
+
+    <p style="text-align: center; margin-top: 2rem;">
+      <strong>Now only you two can read messages on that channel.</strong>
+    </p>
+
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <p><strong>Important security notes:</strong></p>
+        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+          <li>Anyone with the QR code can read that channel's messages</li>
+          <li>Share QR codes in person or via secure channel (Signal, etc.)</li>
+          <li>Don't post private channel QRs publicly</li>
+          <li>If compromised, create a new channel with a new key</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <div class="info-box">
+      <div class="info-box-header">
+        <span class="info-box-title">🤔 How does the encryption work?</span>
+        <span class="info-box-toggle">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>
+          When you create a channel with a "Random" PSK (Pre-Shared Key), the app
+          generates a 256-bit AES encryption key. This is the same encryption
+          standard used by banks and governments.
+        </p>
+        <p>
+          Messages are encrypted on your phone before being transmitted. Even the
+          devices relaying your message can't read it — they just pass along the
+          encrypted blob.
+        </p>
+        <p>
+          Only devices with the exact same key can decrypt and read the messages.
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-header">
+        <span class="info-box-title">💡 Channel limits</span>
+        <span class="info-box-toggle">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>
+          Meshtastic devices can have up to <strong>8 channels</strong> (0-7).
+          Channel 0 is always the primary/public channel.
+        </p>
+        <p>
+          That means you can have up to 7 private conversations active at once.
+          If you need more, you can delete old channels and create new ones.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <div style="text-align: center;">
+      <p>Want to generate a QR code without a device?</p>
+      <a href="/generate/" class="btn btn-secondary">Use QR Generator Tool →</a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-text">
+      ◉───◉───◉───◉ Messages find a way.
+    </p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

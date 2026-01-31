@@ -1,21 +1,37 @@
 /**
- * nashme.sh Service Worker
- * Provides offline functionality for the PWA
+ * NODEVILLE Service Worker
+ * Provides offline functionality for the documentation site
  */
 
-const CACHE_NAME = 'nashme-v1.0.0';
-const RUNTIME_CACHE = 'nashme-runtime-v1.0.0';
+const CACHE_NAME = 'nodeville-v1.0.0';
+const RUNTIME_CACHE = 'nodeville-runtime-v1.0.0';
 
 // Core assets to cache immediately
 const CORE_ASSETS = [
   '/',
   '/index.html',
+  '/get-device/',
+  '/get-device/index.html',
+  '/setup/',
+  '/setup/index.html',
+  '/encrypt/',
+  '/encrypt/index.html',
+  '/generate/',
+  '/generate/index.html',
+  '/advanced/',
+  '/advanced/index.html',
+  '/qr/',
+  '/qr/index.html',
+  '/css/style.css',
+  '/js/main.js',
+  '/js/qr-generator.js',
   '/manifest.webmanifest',
-  '/styles/main.css',
-  '/js/app.js',
-  '/icons/icon.svg',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+];
+
+// External resources to cache
+const EXTERNAL_ASSETS = [
+  'https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js',
+  'https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap',
 ];
 
 // Install event - cache core assets
@@ -61,7 +77,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - cache-first for assets, network-first for HTML
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
@@ -76,20 +92,40 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Skip cross-origin requests except for CDN resources
-  if (url.origin !== location.origin && !url.href.includes('cdn.jsdelivr.net')) {
+  // Allow CDN and Google Fonts
+  const allowedOrigins = [
+    location.origin,
+    'https://cdn.jsdelivr.net',
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com',
+  ];
+
+  const isAllowedOrigin = allowedOrigins.some(origin => url.href.startsWith(origin));
+  if (!isAllowedOrigin) {
     return;
   }
 
   // Handle navigation requests (HTML pages)
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match('/index.html')
-        .then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
+      fetch(request)
+        .then((response) => {
+          // Cache successful responses
+          if (response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseToCache);
+            });
           }
-          return fetch(request).catch(() => {
+          return response;
+        })
+        .catch(() => {
+          // Offline - try to serve from cache
+          return caches.match(request).then((cachedResponse) => {
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+            // Fallback to index.html
             return caches.match('/index.html');
           });
         })
@@ -102,7 +138,6 @@ self.addEventListener('fetch', (event) => {
     caches.match(request)
       .then((cachedResponse) => {
         if (cachedResponse) {
-          // Return cached version
           return cachedResponse;
         }
 
@@ -110,7 +145,7 @@ self.addEventListener('fetch', (event) => {
         return fetch(request)
           .then((response) => {
             // Check if we received a valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+            if (!response || response.status !== 200) {
               return response;
             }
 
@@ -127,13 +162,6 @@ self.addEventListener('fetch', (event) => {
           })
           .catch((error) => {
             console.log('[SW] Fetch failed:', error);
-
-            // Return offline fallback for HTML
-            if (request.headers.get('Accept')?.includes('text/html')) {
-              return caches.match('/index.html');
-            }
-
-            // For other resources, just fail
             throw error;
           });
       })
@@ -144,81 +172,6 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
-  }
-
-  if (event.data && event.data.type === 'CACHE_URLS') {
-    event.waitUntil(
-      caches.open(RUNTIME_CACHE)
-        .then((cache) => cache.addAll(event.data.urls))
-    );
-  }
-});
-
-// Handle push notifications (for future use)
-self.addEventListener('push', (event) => {
-  if (!event.data) return;
-
-  const data = event.data.json();
-
-  const options = {
-    body: data.body,
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      url: data.url || '/',
-    },
-    actions: [
-      {
-        action: 'open',
-        title: 'Open',
-      },
-      {
-        action: 'close',
-        title: 'Close',
-      },
-    ],
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'nashme.sh', options)
-  );
-});
-
-// Handle notification clicks
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  if (event.action === 'close') {
-    return;
-  }
-
-  const url = event.notification.data?.url || '/';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        // Check if there's already a window open
-        for (const client of clientList) {
-          if (client.url === url && 'focus' in client) {
-            return client.focus();
-          }
-        }
-        // Open a new window
-        if (clients.openWindow) {
-          return clients.openWindow(url);
-        }
-      })
-  );
-});
-
-// Background sync (for future offline message queueing)
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'send-messages') {
-    event.waitUntil(
-      // In future: send queued messages when back online
-      Promise.resolve()
-    );
   }
 });
 
