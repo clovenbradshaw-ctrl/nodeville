@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Affiliate Links — Nodeville</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --signal-orange: #E85D04;
+      --signal-orange-dark: #C44E03;
+      --signal-orange-glow: rgba(232, 93, 4, 0.15);
+      --static-green: #06D6A0;
+      --static-green-dim: rgba(6, 214, 160, 0.12);
+      --asphalt: #1A1A22;
+      --concrete: #24242E;
+      --gravel: #32323E;
+      --steel: #4A4A58;
+      --fog: #8A8A9A;
+      --chalk: #CDCDD8;
+      --white: #F5F5F7;
+      --error: #EF476F;
+      --warning: #FFD166;
+
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--asphalt);
+      color: var(--chalk);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--gravel) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    /* NAV */
+    .nav {
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--gravel);
+      margin-bottom: var(--space-xl);
+    }
+
+    .nav__back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 14px;
+      color: var(--fog);
+      transition: color 0.2s ease;
+    }
+
+    .nav__back:hover {
+      color: var(--signal-orange);
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      text-align: center;
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+
+    .page-header__icon {
+      font-size: 48px;
+      margin-bottom: var(--space-md);
+    }
+
+    .page-header__title {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-header__subtitle {
+      font-size: 17px;
+      color: var(--fog);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* INFO BOX */
+    .info-box {
+      background: var(--static-green-dim);
+      border: 1px solid rgba(6, 214, 160, 0.25);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin: var(--space-xl) 0;
+    }
+
+    .info-box__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .info-box__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--static-green);
+    }
+
+    .info-box__content {
+      font-size: 14px;
+      color: var(--chalk);
+      line-height: 1.6;
+    }
+
+    /* CATEGORY SECTIONS */
+    .category {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .category__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .category__icon {
+      font-size: 24px;
+    }
+
+    .category__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    /* PRODUCT LIST */
+    .product-list {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      transition: all 0.2s ease;
+    }
+
+    .product-item:hover {
+      border-color: var(--signal-orange);
+      transform: translateX(4px);
+    }
+
+    .product-item__icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .product-item__content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .product-item__name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: var(--space-xs);
+      line-height: 1.4;
+    }
+
+    .product-item__source {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--fog);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .product-item__arrow {
+      color: var(--signal-orange);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .product-item:hover .product-item__arrow {
+      transform: translateX(4px);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--gravel);
+      text-align: center;
+      margin-top: var(--space-xl);
+    }
+
+    .footer__links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .footer__link {
+      font-size: 14px;
+      color: var(--fog);
+      transition: color 0.2s ease;
+    }
+
+    .footer__link:hover {
+      color: var(--signal-orange);
+    }
+
+    .footer__credit {
+      font-size: 13px;
+      color: var(--steel);
+    }
+
+    .footer__credit a {
+      color: var(--static-green);
+    }
+
+    @media (max-width: 600px) {
+      .page-header__title {
+        font-size: 32px;
+      }
+
+      .product-item {
+        flex-wrap: wrap;
+      }
+
+      .product-item__content {
+        width: calc(100% - 50px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- NAV -->
+    <nav class="nav">
+      <a href="/" class="nav__back">&larr; Back to Nodeville</a>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <div class="page-header__icon">&#128279;</div>
+      <h1 class="page-header__title">Affiliate Links</h1>
+      <p class="page-header__subtitle">
+        Gear we recommend for building your mesh node. These links help support the Nashville mesh network.
+      </p>
+    </header>
+
+    <!-- DISCLOSURE -->
+    <div class="info-box">
+      <div class="info-box__header">
+        <span>&#128161;</span>
+        <span class="info-box__title">Affiliate Disclosure</span>
+      </div>
+      <p class="info-box__content">
+        Some links on this page are affiliate links. When you purchase through these links,
+        we may earn a small commission at no extra cost to you. This helps fund infrastructure
+        nodes and network improvements for the Nashville mesh.
+      </p>
+    </div>
+
+    <!-- STARTER DEVICES -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128225;</span>
+        <h2 class="category__title">Starter Devices</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://a.co/d/hiGgtDS" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128205;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">SenseCAP Card Tracker T1000-E for Meshtastic</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/49XTouX" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128205;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">RAKwireless MOKOSmart Meshtastic Compatible Waterproof GPS Tracker</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4t1pPl7" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128230;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">RAKwireless WisBlock Meshtastic Starter Kit</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/3ZzNGuy" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#9728;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">SenseCAP Solar Node P1 Pro Communication Device</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4pYMADj" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128267;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Heltec MeshPocket - Meshtastic Power Bank with E-Ink Display (10000mAh)</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- DEVELOPMENT BOARDS -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128187;</span>
+        <h2 class="category__title">Development Boards</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/4ajdT6G" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#9889;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">ESP32 LoRa V4 Development Board + 3000mAh Battery (ESP32-S3 SX1262)</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4aapyDU" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#9000;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">LILYGO ESP32-S3 2.8-inch Development Board with Keyboard</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/465pjsk" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128267;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">3000mAh Rechargeable Battery Protection Development Board</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ANTENNAS -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128225;</span>
+        <h2 class="category__title">Antennas</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/4q8t0Vk" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128246;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">ALFA Network AOA-915-5ACM 5dbi Omni Outdoor 915MHz Antenna</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/49Zpbf8" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128246;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">muzi works 915MHz LoRa Antenna Meshtastic External Antenna</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4q8tPNU" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128230;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Eifagur Wireless Meshtastic External Antenna Pack</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://www.digikey.com/en/products/detail/te-connectivity/MA9-5N/3486940" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128246;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">RF ANT 900MHZ WHIP STR N FEM 16"</div>
+            <div class="product-item__source">DigiKey</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CABLES & CONNECTORS -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128268;</span>
+        <h2 class="category__title">Cables & Connectors</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/4qU9Bc8" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128268;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Proxicast Low-Loss Coaxial Extension Cable</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://wifiexpert.us/customRFCable.php" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128295;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Custom RF Cables (Build Your Own)</div>
+            <div class="product-item__source">WiFi Expert</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4a3vMFx" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128268;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">JST-PH 2.0 Male and Female Connector Cables (10pcs)</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4tnVDkr" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128295;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">MGI SpeedWare 1/2" NPT Strain Relief Cord Grip Cable Glands (5-Pack)</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- POWER & BATTERIES -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128267;</span>
+        <h2 class="category__title">Power & Batteries</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://18650battery.com/products/molicel-p45b-21700-4500mah-45a-battery" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128267;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Molicel P45B 21700 4500mAh 45A Battery</div>
+            <div class="product-item__source">18650 Battery Store</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4a3XNN8" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128267;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">12V 20Ah Lithium Ion Battery</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4rpEBAx" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#9889;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Waterproof Battery Trickle Charger Maintainer</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4tdjtiH" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128295;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Battery Mounting Flat-Top Nickel-Plated Electronics</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4bqpy4L" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#9889;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">UCTRONICS PoE Splitter USB-C Power Delivery</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ENCLOSURES -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128230;</span>
+        <h2 class="category__title">Enclosures & Weatherproofing</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/3NJZ58u" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128230;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">LMioEtool Dustproof Waterproof Electrical Junction Box</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4q3HCoY" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128167;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">FUTUREZEN Security Waterproof Adjustable Connector</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- TEST EQUIPMENT -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#128200;</span>
+        <h2 class="category__title">Test Equipment</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/4t4iHnN" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128200;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">AURSINC NanoVNA-H4 Vector Network Analyzer (9KHz-1.5GHz)</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- RASPBERRY PI -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#127807;</span>
+        <h2 class="category__title">Raspberry Pi & Accessories</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://amzn.to/45waPla" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#127807;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Raspberry Pi Zero WH Kit</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/3NGMByx" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#127807;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Raspberry Pi 4 Model B Quad-Core Processor</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+        <a href="https://amzn.to/4q5PKW2" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#128268;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">Waveshare Ethernet Raspberry Pi Isolated Module</div>
+            <div class="product-item__source">Amazon</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- COMMUNITY STORES -->
+    <section class="category">
+      <div class="category__header">
+        <span class="category__icon">&#127970;</span>
+        <h2 class="category__title">Community Stores</h2>
+      </div>
+      <div class="product-list">
+        <a href="https://peakmesh.etsy.com/" class="product-item" target="_blank" rel="noopener">
+          <span class="product-item__icon">&#127970;</span>
+          <div class="product-item__content">
+            <div class="product-item__name">PeakMesh Etsy Store - Custom Meshtastic Builds</div>
+            <div class="product-item__source">Etsy</div>
+          </div>
+          <span class="product-item__arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <nav class="footer__links">
+        <a href="/setup/" class="footer__link">Setup Guide</a>
+        <a href="/encrypt/" class="footer__link">Encryption</a>
+        <a href="/advanced/" class="footer__link">Advanced</a>
+        <a href="/qr/" class="footer__link">Network QR</a>
+        <a href="/affiliate/" class="footer__link">Affiliate Links</a>
+      </nav>
+      <p class="footer__credit">
+        Part of the <a href="https://hyphae.social">Hyphae Network</a> &middot; Built for Nashville
+      </p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
