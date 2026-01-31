@@ -13,12 +13,12 @@
   // Nodeville Nashville network defaults
   const HYPHAE_MESH_CONFIG = {
     lora: {
+      usePreset: true,     // Use the modem preset
       region: 1,           // US (RegionCode.US)
       modemPreset: 3,      // MEDIUM_FAST (ModemPreset.MEDIUM_FAST)
       hopLimit: 7,         // Good coverage for Nashville metro
       txEnabled: true,
-      txPower: 30,
-      configOkToMqtt: true // Allow MQTT gateways to forward your packets
+      txPower: 30
     },
     channel: {
       name: '',            // Blank for primary per TN convention
@@ -119,46 +119,30 @@
     return concatUint8Arrays(parts);
   }
 
-  // Build Channel proto
-  function buildChannel(channel) {
-    const parts = [];
-
-    // field 1: index (int32)
-    if (channel.index !== undefined) {
-      parts.push(encodeUint32(1, channel.index));
-    }
-
-    // field 2: settings (ChannelSettings)
-    if (channel.settings) {
-      const settings = buildChannelSettings(channel.settings);
-      parts.push(encodeField(2, WIRE_TYPE.LENGTH_DELIMITED, settings));
-    }
-
-    // field 3: role (ChannelRole enum)
-    if (channel.role !== undefined) {
-      parts.push(encodeUint32(3, channel.role));
-    }
-
-    return concatUint8Arrays(parts);
-  }
-
   // Build LoRaConfig proto
+  // Field numbers from Meshtastic protobufs:
+  // https://github.com/meshtastic/protobufs/blob/master/meshtastic/config.proto
   function buildLoRaConfig(lora) {
     const parts = [];
 
-    // field 3: region (RegionCode enum)
-    if (lora.region !== undefined) {
-      parts.push(encodeUint32(3, lora.region));
+    // field 1: use_preset (bool)
+    if (lora.usePreset !== undefined) {
+      parts.push(encodeBool(1, lora.usePreset));
     }
 
-    // field 4: modem_preset (ModemPreset enum)
+    // field 2: modem_preset (ModemPreset enum)
     if (lora.modemPreset !== undefined) {
-      parts.push(encodeUint32(4, lora.modemPreset));
+      parts.push(encodeUint32(2, lora.modemPreset));
     }
 
-    // field 7: hop_limit (uint32)
+    // field 7: region (RegionCode enum)
+    if (lora.region !== undefined) {
+      parts.push(encodeUint32(7, lora.region));
+    }
+
+    // field 8: hop_limit (uint32)
     if (lora.hopLimit !== undefined) {
-      parts.push(encodeUint32(7, lora.hopLimit));
+      parts.push(encodeUint32(8, lora.hopLimit));
     }
 
     // field 11: tx_enabled (bool)
@@ -171,23 +155,20 @@
       parts.push(encodeUint32(12, lora.txPower));
     }
 
-    // field 105: config_ok_to_mqtt (bool) - allows MQTT gateways to forward your packets
-    if (lora.configOkToMqtt !== undefined) {
-      parts.push(encodeBool(105, lora.configOkToMqtt));
-    }
-
     return concatUint8Arrays(parts);
   }
 
-  // Build ChannelSet proto (main message)
+  // Build ChannelSet proto (main message for QR URLs)
+  // Note: QR URLs use ChannelSettings directly, not wrapped in Channel
+  // https://github.com/meshtastic/protobufs/blob/master/meshtastic/apponly.proto
   function buildChannelSet(config) {
     const parts = [];
 
-    // field 1: settings (repeated Channel)
-    if (config.channels) {
-      config.channels.forEach(channel => {
-        const channelBytes = buildChannel(channel);
-        parts.push(encodeField(1, WIRE_TYPE.LENGTH_DELIMITED, channelBytes));
+    // field 1: settings (repeated ChannelSettings) - direct, not wrapped
+    if (config.settings) {
+      config.settings.forEach(settings => {
+        const settingsBytes = buildChannelSettings(settings);
+        parts.push(encodeField(1, WIRE_TYPE.LENGTH_DELIMITED, settingsBytes));
       });
     }
 
@@ -214,15 +195,11 @@
   function generateHyphaeNetworkURL() {
     const config = {
       lora: HYPHAE_MESH_CONFIG.lora,
-      channels: [{
-        index: 0,
-        settings: {
-          name: HYPHAE_MESH_CONFIG.channel.name,
-          psk: HYPHAE_MESH_CONFIG.channel.psk,
-          uplinkEnabled: HYPHAE_MESH_CONFIG.channel.uplinkEnabled,
-          downlinkEnabled: HYPHAE_MESH_CONFIG.channel.downlinkEnabled
-        },
-        role: 1  // PRIMARY
+      settings: [{
+        name: HYPHAE_MESH_CONFIG.channel.name,
+        psk: HYPHAE_MESH_CONFIG.channel.psk,
+        uplinkEnabled: HYPHAE_MESH_CONFIG.channel.uplinkEnabled,
+        downlinkEnabled: HYPHAE_MESH_CONFIG.channel.downlinkEnabled
       }]
     };
 
@@ -235,15 +212,11 @@
 
     const config = {
       lora: HYPHAE_MESH_CONFIG.lora,
-      channels: [{
-        index: 0,
-        settings: {
-          name: channelName || 'Private',
-          psk: psk,
-          uplinkEnabled: false,  // Private channels don't uplink
-          downlinkEnabled: false
-        },
-        role: 1  // PRIMARY
+      settings: [{
+        name: channelName || 'Private',
+        psk: psk,
+        uplinkEnabled: false,  // Private channels don't uplink
+        downlinkEnabled: false
       }]
     };
 
