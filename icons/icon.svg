@@ -1,0 +1,43 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#2a2a2a"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D4AA"/>
+      <stop offset="100%" style="stop-color:#00B894"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bgGrad)"/>
+
+  <!-- Outer ring representing mesh network -->
+  <circle cx="256" cy="256" r="180" stroke="url(#primaryGrad)" stroke-width="16" fill="none" opacity="0.3"/>
+  <circle cx="256" cy="256" r="140" stroke="url(#primaryGrad)" stroke-width="12" fill="none" opacity="0.5"/>
+
+  <!-- Center lock icon representing encryption -->
+  <g transform="translate(176, 160)">
+    <!-- Lock body -->
+    <rect x="20" y="80" width="120" height="100" rx="16" fill="url(#primaryGrad)"/>
+    <!-- Lock shackle -->
+    <path d="M45 80 V55 C45 25 80 10 80 10 C80 10 115 25 115 55 V80"
+          stroke="url(#primaryGrad)" stroke-width="16" stroke-linecap="round" fill="none"/>
+    <!-- Keyhole -->
+    <circle cx="80" cy="125" r="16" fill="#1a1a1a"/>
+    <rect x="72" y="125" width="16" height="30" rx="4" fill="#1a1a1a"/>
+  </g>
+
+  <!-- Network nodes around the icon -->
+  <circle cx="256" cy="76" r="24" fill="#00D4AA"/>
+  <circle cx="436" cy="256" r="24" fill="#00B894"/>
+  <circle cx="256" cy="436" r="24" fill="#00D4AA"/>
+  <circle cx="76" cy="256" r="24" fill="#00B894"/>
+
+  <!-- Connection lines (mesh representation) -->
+  <line x1="256" y1="100" x2="256" y2="160" stroke="url(#primaryGrad)" stroke-width="4" opacity="0.6"/>
+  <line x1="412" y1="256" x2="340" y2="256" stroke="url(#primaryGrad)" stroke-width="4" opacity="0.6"/>
+  <line x1="256" y1="360" x2="256" y2="412" stroke="url(#primaryGrad)" stroke-width="4" opacity="0.6"/>
+  <line x1="172" y1="256" x2="100" y2="256" stroke="url(#primaryGrad)" stroke-width="4" opacity="0.6"/>
+</svg>

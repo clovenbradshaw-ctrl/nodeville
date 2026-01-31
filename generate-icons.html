@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>nashme.sh Icon Generator</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #1a1a1a;
+      color: white;
+    }
+    h1 { color: #00D4AA; }
+    .icons { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
+    .icon-box { text-align: center; }
+    canvas { border: 1px solid #333; border-radius: 8px; }
+    button {
+      background: #00D4AA;
+      color: black;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem;
+    }
+    button:hover { background: #00B894; }
+    a { color: #00D4AA; }
+  </style>
+</head>
+<body>
+  <h1>nashme.sh Icon Generator</h1>
+  <p>This page generates PWA icons from the SVG source.</p>
+
+  <div class="icons" id="icons"></div>
+
+  <div id="actions">
+    <button onclick="downloadAll()">Download All Icons</button>
+    <button onclick="generateAll()">Regenerate</button>
+  </div>
+
+  <h2>Instructions</h2>
+  <ol>
+    <li>Click "Regenerate" to create all icon sizes</li>
+    <li>Right-click each icon and "Save Image As..." OR click "Download All Icons"</li>
+    <li>Save to the <code>icons/</code> folder with proper names (icon-72.png, icon-96.png, etc.)</li>
+  </ol>
+
+  <script>
+    const sizes = [72, 96, 128, 144, 192, 256, 384, 512];
+    const svgUrl = 'icon.svg';
+
+    async function generateAll() {
+      const container = document.getElementById('icons');
+      container.innerHTML = '';
+
+      const response = await fetch(svgUrl);
+      const svgText = await response.text();
+
+      for (const size of sizes) {
+        const canvas = await renderIcon(svgText, size);
+        const box = document.createElement('div');
+        box.className = 'icon-box';
+        box.innerHTML = `<p>${size}x${size}</p>`;
+        box.appendChild(canvas);
+
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = `icon-${size}.png`;
+        link.textContent = 'Download';
+        link.style.display = 'block';
+        link.style.marginTop = '0.5rem';
+        box.appendChild(link);
+
+        container.appendChild(box);
+      }
+    }
+
+    async function renderIcon(svgText, size) {
+      return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        const img = new Image();
+        const blob = new Blob([svgText], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, size, size);
+          URL.revokeObjectURL(url);
+          resolve(canvas);
+        };
+
+        img.src = url;
+      });
+    }
+
+    async function downloadAll() {
+      const response = await fetch(svgUrl);
+      const svgText = await response.text();
+
+      for (const size of sizes) {
+        const canvas = await renderIcon(svgText, size);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = `icon-${size}.png`;
+        link.click();
+        await new Promise(r => setTimeout(r, 500)); // Delay between downloads
+      }
+    }
+
+    // Generate on load
+    generateAll();
+  </script>
+</body>
+</html>

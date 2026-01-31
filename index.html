@@ -1,1 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#00D4AA">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="nashme.sh">
+  <meta name="description" content="nashme.sh - Encrypted mesh messaging for Middle Tennessee. No internet required after setup.">
 
+  <title>nashme.sh - Nashville Meshtastic Network</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+
+  <link rel="stylesheet" href="styles/main.css">
+
+  <!-- Meshtastic.js from CDN -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@meshtastic/js@2.3.0/dist/index.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Loading screen shown initially -->
+    <div id="loading-screen" class="screen">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <!-- Templates -->
+  <template id="onboarding-template">
+    <div class="screen onboarding">
+      <div class="onboarding-content">
+        <div class="logo">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="60" cy="60" r="55" stroke="url(#grad1)" stroke-width="6"/>
+            <path d="M35 60 L50 75 L85 40" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="60" cy="25" r="8" fill="#00D4AA"/>
+            <circle cx="95" cy="60" r="8" fill="#00B894"/>
+            <circle cx="60" cy="95" r="8" fill="#00D4AA"/>
+            <circle cx="25" cy="60" r="8" fill="#00B894"/>
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00D4AA"/>
+                <stop offset="100%" style="stop-color:#00B894"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <h1>nashme.sh</h1>
+        <p class="subtitle">Encrypted mesh messaging for Middle Tennessee</p>
+
+        <div class="features">
+          <div class="feature">
+            <span class="feature-icon">&#x1F512;</span>
+            <h3>End-to-End Encrypted</h3>
+            <p>Private conversations</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">&#x1F4E1;</span>
+            <h3>No Internet Required</h3>
+            <p>Works completely offline</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">&#x26A1;</span>
+            <h3>Auto Setup</h3>
+            <p>We configure everything</p>
+          </div>
+        </div>
+
+        <div class="requirements">
+          <h3>Before you start:</h3>
+          <ul>
+            <li>&#x2713; Meshtastic device powered on</li>
+            <li>&#x2713; Bluetooth enabled on your phone</li>
+            <li>&#x2713; Device within range</li>
+          </ul>
+        </div>
+
+        <button id="connect-btn" class="primary-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.71 7.71L12 2 6.29 7.71a1 1 0 0 0 1.42 1.42L11 5.83V22a1 1 0 0 0 2 0V5.83l3.29 3.3a1 1 0 0 0 1.42-1.42z" transform="rotate(90 12 12)"/>
+          </svg>
+          Connect My Device
+        </button>
+
+        <p class="help-text">
+          Don't have a device? <a href="https://meshtastic.org/docs/hardware" target="_blank">Learn more</a>
+        </p>
+      </div>
+    </div>
+  </template>
+
+  <template id="connecting-template">
+    <div class="screen connecting">
+      <div class="connecting-content">
+        <div class="spinner-container">
+          <div class="spinner large"></div>
+          <div class="pulse-ring"></div>
+        </div>
+
+        <h2 id="connect-title">Connecting...</h2>
+        <p id="connect-status" class="status-message">Looking for your Meshtastic device...</p>
+
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+          </div>
+          <p id="progress-text" class="progress-text">0%</p>
+        </div>
+
+        <div class="config-checklist">
+          <h3>Setting up:</h3>
+          <ul id="config-steps">
+            <li data-step="region">Network region (US)</li>
+            <li data-step="radio">Radio settings (Medium Fast)</li>
+            <li data-step="channel">nashme.sh public channel</li>
+            <li data-step="battery">Battery optimization</li>
+            <li data-step="position">Position settings</li>
+            <li data-step="role">Device role</li>
+            <li data-step="verify">Final verification</li>
+          </ul>
+        </div>
+
+        <p class="patience-note">This takes about 30 seconds...</p>
+      </div>
+    </div>
+  </template>
+
+  <template id="user-setup-template">
+    <div class="screen user-setup">
+      <div class="setup-content">
+        <h2>Almost Done!</h2>
+        <p>Choose how you appear to others on the mesh:</p>
+
+        <div class="form-group">
+          <label for="long-name">Display Name</label>
+          <input type="text" id="long-name" placeholder="Your name or handle" maxlength="40">
+          <small>Visible to other users on the mesh</small>
+        </div>
+
+        <div class="form-group">
+          <label for="short-name">Short Name (4 chars)</label>
+          <input type="text" id="short-name" placeholder="NASH" maxlength="4">
+          <small>Shows in chat - emojis work too!</small>
+        </div>
+
+        <button id="save-user-btn" class="primary-btn">Continue</button>
+        <button id="skip-user-btn" class="text-btn">Skip for now</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="success-template">
+    <div class="screen success">
+      <div class="success-content">
+        <div class="success-animation">
+          <div class="checkmark">&#x2713;</div>
+        </div>
+
+        <h2>You're all set!</h2>
+        <p>Your device is configured for nashme.sh</p>
+
+        <div class="success-details">
+          <div class="detail">
+            <span class="detail-icon">&#x1F4E1;</span>
+            <div>
+              <strong>Connected to nashme.sh</strong>
+              <p>Public mesh network active</p>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="detail-icon">&#x1F50B;</span>
+            <div>
+              <strong>Battery optimized</strong>
+              <p>6-hour broadcast intervals</p>
+            </div>
+          </div>
+          <div class="detail">
+            <span class="detail-icon">&#x1F512;</span>
+            <div>
+              <strong>Ready for secure chats</strong>
+              <p>Create encrypted conversations</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="loading-text">Opening messenger...</p>
+      </div>
+    </div>
+  </template>
+
+  <template id="messenger-template">
+    <div class="screen messenger">
+      <div class="messenger-layout">
+        <!-- Sidebar / Conversation List -->
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <h1>Messages</h1>
+            <div class="header-actions">
+              <button id="new-dm-btn" class="icon-btn" title="New Message">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+              </button>
+              <button id="settings-btn" class="icon-btn" title="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="conversation-list" class="conversation-list">
+            <!-- Conversations populated by JS -->
+          </div>
+
+          <button id="new-conversation-fab" class="fab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-icon">&#x1F4AC;</div>
+            <h2>No conversation selected</h2>
+            <p>Start a new encrypted conversation or select one from the list</p>
+            <button id="start-convo-btn" class="primary-btn">New Conversation</button>
+          </div>
+
+          <div id="conversation-view" class="conversation-view hidden">
+            <div class="convo-header">
+              <button id="back-btn" class="icon-btn mobile-only">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+              </button>
+              <div class="convo-info">
+                <div id="convo-avatar" class="avatar">
+                  <span>?</span>
+                </div>
+                <div>
+                  <h2 id="convo-name">Conversation</h2>
+                  <p id="convo-subtitle" class="subtitle">Tap for info</p>
+                </div>
+              </div>
+              <div class="convo-actions">
+                <button id="convo-info-btn" class="icon-btn" title="Conversation Info">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div id="messages-container" class="messages-container">
+              <!-- Messages populated by JS -->
+            </div>
+
+            <div class="message-input-area">
+              <div class="input-container">
+                <textarea id="message-input" placeholder="Message..." rows="1"></textarea>
+                <button id="send-btn" class="send-btn">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="encryption-indicator">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                </svg>
+                End-to-end encrypted
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="new-contact-modal-template">
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>New Conversation</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-content">
+          <div class="modal-tabs">
+            <button class="tab-btn active" data-tab="scan">Scan QR</button>
+            <button class="tab-btn" data-tab="manual">Manual</button>
+            <button class="tab-btn" data-tab="nearby">Nearby</button>
+          </div>
+
+          <div id="tab-scan" class="tab-content active">
+            <div id="qr-reader" class="qr-reader">
+              <p>Camera access required to scan QR codes</p>
+              <button id="start-scan-btn" class="secondary-btn">Enable Camera</button>
+            </div>
+            <p class="help-text">Scan a contact's QR code to start a secure conversation</p>
+          </div>
+
+          <div id="tab-manual" class="tab-content">
+            <div class="form-group">
+              <label for="contact-node-id">Node ID</label>
+              <input type="text" id="contact-node-id" placeholder="!12345678">
+              <small>Find this in their Meshtastic settings</small>
+            </div>
+            <div class="form-group">
+              <label for="contact-name">Contact Name</label>
+              <input type="text" id="contact-name" placeholder="Alice">
+            </div>
+            <button id="add-contact-btn" class="primary-btn">Create Encrypted Chat</button>
+          </div>
+
+          <div id="tab-nearby" class="tab-content">
+            <div id="nearby-nodes" class="nearby-list">
+              <p class="help-text">Searching for nearby nodes...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="security-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+          </svg>
+          A new encrypted channel will be created for this conversation
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="share-modal-template">
+    <div class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Share Conversation</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-content">
+          <div id="share-qr" class="qr-display">
+            <!-- QR code rendered here -->
+          </div>
+
+          <p class="help-text">Scan this QR code to join the conversation</p>
+
+          <div class="share-actions">
+            <button id="copy-link-btn" class="secondary-btn">Copy Link</button>
+            <button id="share-btn" class="secondary-btn">Share</button>
+          </div>
+        </div>
+
+        <div class="warning-note">
+          <strong>Security Note:</strong> Anyone with this QR code can join and read messages in this conversation.
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="safety-number-template">
+    <div class="modal-overlay">
+      <div class="modal safety-modal">
+        <div class="modal-header">
+          <h2>Verify Safety Number</h2>
+          <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-content">
+          <div id="verification-status" class="verification-status">
+            <div class="status-icon unverified">!</div>
+            <h3>Not Verified</h3>
+            <p>Verify safety numbers to ensure secure communication</p>
+          </div>
+
+          <div class="safety-numbers">
+            <div class="safety-number">
+              <h4>Your Number</h4>
+              <code id="local-fingerprint" class="fingerprint">Loading...</code>
+            </div>
+            <div class="safety-number">
+              <h4>Their Number</h4>
+              <code id="remote-fingerprint" class="fingerprint">Loading...</code>
+            </div>
+          </div>
+
+          <div class="verification-instructions">
+            <h3>How to Verify</h3>
+            <ol>
+              <li>Compare these numbers with your contact in person or via trusted channel</li>
+              <li>If they match exactly, tap "Mark as Verified"</li>
+              <li>If they don't match, someone may be intercepting messages</li>
+            </ol>
+          </div>
+
+          <button id="verify-btn" class="primary-btn">Mark as Verified</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="error-template">
+    <div class="screen error">
+      <div class="error-content">
+        <div class="error-icon">&#x26A0;</div>
+        <h2>Connection Failed</h2>
+        <p id="error-message" class="error-message">Unable to connect to device</p>
+
+        <div class="troubleshooting">
+          <h3>Try these steps:</h3>
+          <ul>
+            <li>Make sure your device is powered on</li>
+            <li>Check that Bluetooth is enabled</li>
+            <li>Move your device closer</li>
+            <li>Restart your Meshtastic device</li>
+          </ul>
+        </div>
+
+        <button id="retry-btn" class="primary-btn">Try Again</button>
+        <a href="https://discord.gg/nashme" class="help-link" target="_blank">Need help? Join our Discord</a>
+      </div>
+    </div>
+  </template>
+
+  <template id="conversation-item-template">
+    <div class="conversation-item" data-id="">
+      <div class="convo-avatar">
+        <span class="avatar-text">?</span>
+      </div>
+      <div class="convo-content">
+        <div class="convo-header-row">
+          <h3 class="convo-name">Name</h3>
+          <span class="convo-time">12:00</span>
+        </div>
+        <div class="convo-preview-row">
+          <p class="convo-preview">Last message...</p>
+          <span class="unread-badge hidden">0</span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="message-template">
+    <div class="message" data-id="">
+      <div class="message-bubble">
+        <p class="message-text"></p>
+        <div class="message-meta">
+          <span class="message-time">12:00</span>
+          <span class="message-status"></span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="nearby-node-template">
+    <div class="nearby-node" data-id="">
+      <div class="node-avatar">
+        <span>?</span>
+      </div>
+      <div class="node-info">
+        <h4 class="node-name">Unknown Node</h4>
+        <p class="node-id">!12345678</p>
+      </div>
+      <div class="node-signal">
+        <span class="signal-bars">||||</span>
+      </div>
+      <button class="add-node-btn">Add</button>
+    </div>
+  </template>
+
+  <!-- Main Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "nashme.sh - Nashville Meshtastic",
+  "short_name": "nashme.sh",
+  "description": "Encrypted mesh messaging for Middle Tennessee. No internet required after setup.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#00D4AA",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["communication", "social", "utilities"],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
