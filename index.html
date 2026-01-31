@@ -3,133 +3,1002 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NODEVILLE - Nashville Mesh Network</title>
-  <meta name="description" content="Off-grid encrypted messaging for Nashville. No towers. No bills. Just neighbors.">
-  <meta name="theme-color" content="#E85D04">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Nodeville — Nashville's Mesh Network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       NODEVILLE DESIGN SYSTEM
+       Nashville's Mesh Network
+       ======================================== */
+
+    :root {
+      /* Primary Colors */
+      --signal-orange: #E85D04;
+      --signal-orange-dark: #C44E03;
+      --signal-orange-glow: rgba(232, 93, 4, 0.15);
+
+      /* Accent */
+      --static-green: #06D6A0;
+      --static-green-dim: rgba(6, 214, 160, 0.12);
+
+      /* Neutrals */
+      --asphalt: #1A1A22;
+      --concrete: #24242E;
+      --gravel: #32323E;
+      --steel: #4A4A58;
+      --fog: #8A8A9A;
+      --chalk: #CDCDD8;
+      --white: #F5F5F7;
+
+      /* Status */
+      --error: #EF476F;
+      --warning: #FFD166;
+      --success: var(--static-green);
+
+      /* Typography */
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+
+      /* Radii */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--asphalt);
+      color: var(--chalk);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Dot grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--gravel) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ========================================
+       LAYOUT
+       ======================================== */
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    /* ========================================
+       HEADER
+       ======================================== */
+
+    .site-header {
+      padding: var(--space-2xl) 0;
+      text-align: center;
+    }
+
+    .logo {
+      display: inline-block;
+      margin-bottom: var(--space-lg);
+    }
+
+    .logo svg {
+      width: 100px;
+      height: 100px;
+      filter: drop-shadow(0 0 24px var(--signal-orange-glow));
+    }
+
+    .wordmark {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    .wordmark .node-o {
+      color: var(--signal-orange);
+    }
+
+    .tagline {
+      font-size: 15px;
+      color: var(--fog);
+      letter-spacing: 0.02em;
+    }
+
+    /* ========================================
+       NODE DIVIDER
+       ======================================== */
+
+    .node-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: var(--space-xl) 0;
+    }
+
+    .node-divider__dot {
+      width: 10px;
+      height: 10px;
+      background: var(--steel);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .node-divider__dot--active {
+      background: var(--signal-orange);
+      box-shadow: 0 0 12px var(--signal-orange);
+    }
+
+    .node-divider__line {
+      width: 40px;
+      height: 2px;
+      background: var(--steel);
+    }
+
+    /* ========================================
+       HERO SECTION
+       ======================================== */
+
+    .hero {
+      text-align: center;
+      padding: var(--space-xl) 0 var(--space-3xl);
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 8vw, 56px);
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-bottom: var(--space-lg);
+    }
+
+    .hero__title .highlight {
+      color: var(--signal-orange);
+    }
+
+    .hero__subtitle {
+      font-size: 18px;
+      color: var(--fog);
+      max-width: 520px;
+      margin: 0 auto var(--space-xl);
+      line-height: 1.7;
+    }
+
+    .hero__features {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xl);
+      flex-wrap: wrap;
+    }
+
+    .hero__feature {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 14px;
+      color: var(--chalk);
+    }
+
+    .hero__feature svg {
+      width: 18px;
+      height: 18px;
+      color: var(--static-green);
+    }
+
+    /* ========================================
+       SECTION HEADERS
+       ======================================== */
+
+    .section {
+      padding: var(--space-xl) 0;
+    }
+
+    .section__header {
+      margin-bottom: var(--space-lg);
+    }
+
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--fog);
+      margin-bottom: var(--space-xs);
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* ========================================
+       CARDS
+       ======================================== */
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .card {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      position: relative;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--signal-orange);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: var(--signal-orange);
+      transform: translateY(-3px);
+    }
+
+    .card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .card__icon {
+      width: 44px;
+      height: 44px;
+      background: var(--gravel);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: var(--space-md);
+    }
+
+    .card__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: var(--space-xs);
+    }
+
+    .card__description {
+      font-size: 14px;
+      color: var(--fog);
+      margin-bottom: var(--space-md);
+      flex-grow: 1;
+      line-height: 1.5;
+    }
+
+    .card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--gravel);
+    }
+
+    .card__time {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fog);
+    }
+
+    .card__arrow {
+      font-size: 18px;
+      color: var(--signal-orange);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover .card__arrow {
+      transform: translateX(4px);
+    }
+
+    /* ========================================
+       INFO BOX
+       ======================================== */
+
+    .info-box {
+      background: var(--static-green-dim);
+      border: 1px solid rgba(6, 214, 160, 0.25);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin: var(--space-xl) 0;
+    }
+
+    .info-box__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .info-box__icon {
+      font-size: 18px;
+    }
+
+    .info-box__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--static-green);
+    }
+
+    .info-box__content {
+      font-size: 14px;
+      color: var(--chalk);
+      line-height: 1.6;
+    }
+
+    .info-box--warning {
+      background: var(--signal-orange-glow);
+      border-color: rgba(232, 93, 4, 0.3);
+    }
+
+    .info-box--warning .info-box__title {
+      color: var(--signal-orange);
+    }
+
+    /* ========================================
+       QR CODE SECTION
+       ======================================== */
+
+    .qr-section {
+      text-align: center;
+    }
+
+    .qr-section__intro {
+      color: var(--fog);
+      margin-bottom: var(--space-lg);
+    }
+
+    .qr-container {
+      display: inline-block;
+      background: var(--white);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .qr-placeholder {
+      width: 200px;
+      height: 200px;
+      background:
+        linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+        linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #999;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ========================================
+       CODE BLOCK
+       ======================================== */
+
+    .code-block {
+      background: var(--gravel);
+      border: 1px solid var(--steel);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: var(--space-md) 0;
+    }
+
+    .code-block__text {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--static-green);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .code-block__copy {
+      background: transparent;
+      border: none;
+      color: var(--fog);
+      cursor: pointer;
+      padding: var(--space-xs) var(--space-sm);
+      font-size: 14px;
+      transition: color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .code-block__copy:hover {
+      color: var(--signal-orange);
+    }
+
+    /* ========================================
+       STEP PROGRESS
+       ======================================== */
+
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: var(--space-md);
+    }
+
+    .step__dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--steel);
+    }
+
+    .step__dot--complete {
+      background: var(--static-green);
+    }
+
+    .step__dot--current {
+      background: var(--signal-orange);
+      box-shadow: 0 0 0 4px var(--signal-orange-glow);
+    }
+
+    .step__line {
+      width: 48px;
+      height: 2px;
+      background: var(--steel);
+    }
+
+    .step__line--complete {
+      background: var(--static-green);
+    }
+
+    .step__label {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fog);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ========================================
+       BUTTONS
+       ======================================== */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .btn--primary {
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      border-color: var(--signal-orange);
+    }
+
+    .btn--primary:hover {
+      background: var(--signal-orange-dark);
+      border-color: var(--signal-orange-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--signal-orange);
+      border-color: var(--signal-orange);
+    }
+
+    .btn--secondary:hover {
+      background: var(--signal-orange-glow);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--fog);
+      border-color: transparent;
+      padding: var(--space-sm) 0;
+    }
+
+    .btn--ghost:hover {
+      color: var(--signal-orange);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-top: var(--space-lg);
+    }
+
+    /* ========================================
+       COLLAPSIBLE
+       ======================================== */
+
+    .collapsible {
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      margin: var(--space-lg) 0;
+      overflow: hidden;
+    }
+
+    .collapsible__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--concrete);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .collapsible__header:hover {
+      background: var(--gravel);
+    }
+
+    .collapsible__icon {
+      font-size: 16px;
+    }
+
+    .collapsible__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--chalk);
+      flex-grow: 1;
+    }
+
+    .collapsible__arrow {
+      color: var(--fog);
+      transition: transform 0.2s ease;
+      font-size: 12px;
+    }
+
+    .collapsible--open .collapsible__arrow {
+      transform: rotate(180deg);
+    }
+
+    .collapsible__content {
+      padding: var(--space-lg);
+      background: var(--concrete);
+      border-top: 1px solid var(--gravel);
+      font-size: 14px;
+      color: var(--fog);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .collapsible--open .collapsible__content {
+      display: block;
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+
+    .site-footer {
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--gravel);
+      margin-top: var(--space-3xl);
+      text-align: center;
+    }
+
+    .footer__links {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .footer__link {
+      font-size: 14px;
+      color: var(--fog);
+      transition: color 0.2s ease;
+    }
+
+    .footer__link:hover {
+      color: var(--signal-orange);
+    }
+
+    .footer__credit {
+      font-size: 13px;
+      color: var(--steel);
+    }
+
+    .footer__credit a {
+      color: var(--static-green);
+    }
+
+    /* ========================================
+       ANIMATIONS
+       ======================================== */
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+
+    @media (max-width: 600px) {
+      .hero__title {
+        font-size: 32px;
+      }
+
+      .hero__features {
+        flex-direction: column;
+        gap: var(--space-sm);
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step__line {
+        width: 24px;
+      }
+
+      .wordmark {
+        font-size: 32px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn-group .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <!-- Hexagon Node Logo -->
-    <pre class="node-pattern" aria-hidden="true">  ◉───◉
- ╱     ╲
-◉       ◉
- ╲     ╱
-  ◉───◉</pre>
-    <h1 class="site-logo">N<span class="node">◉</span>DEVILLE</h1>
-    <p class="site-tagline">Your neighborhood mesh network</p>
-  </header>
+  <div class="container">
 
-  <main class="container">
-    <p class="intro-text">
-      Meshtastic lets you send encrypted messages without cell service or internet.
-      Your messages hop through a community mesh network using affordable radio devices.
-      No accounts. No servers. No surveillance.
-    </p>
+    <!-- ==================== HEADER ==================== -->
+    <header class="site-header">
+      <div class="logo animate-in">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Hexagon frame -->
+          <path d="M50 8 L85 28 L85 72 L50 92 L15 72 L15 28 Z"
+                stroke="#32323E" stroke-width="2" fill="none"/>
+          <!-- Outer nodes -->
+          <circle cx="50" cy="8" r="6" fill="#E85D04"/>
+          <circle cx="85" cy="28" r="6" fill="#E85D04"/>
+          <circle cx="85" cy="72" r="6" fill="#E85D04"/>
+          <circle cx="50" cy="92" r="6" fill="#E85D04"/>
+          <circle cx="15" cy="72" r="6" fill="#E85D04"/>
+          <circle cx="15" cy="28" r="6" fill="#E85D04"/>
+          <!-- Center node -->
+          <circle cx="50" cy="50" r="8" fill="#06D6A0"/>
+          <!-- Center connections -->
+          <line x1="50" y1="50" x2="50" y2="14" stroke="#32323E" stroke-width="2"/>
+          <line x1="50" y1="50" x2="80" y2="31" stroke="#32323E" stroke-width="2"/>
+          <line x1="50" y1="50" x2="80" y2="69" stroke="#32323E" stroke-width="2"/>
+          <line x1="50" y1="50" x2="50" y2="86" stroke="#32323E" stroke-width="2"/>
+          <line x1="50" y1="50" x2="20" y2="69" stroke="#32323E" stroke-width="2"/>
+          <line x1="50" y1="50" x2="20" y2="31" stroke="#32323E" stroke-width="2"/>
+        </svg>
+      </div>
+      <h1 class="wordmark animate-in delay-1">N<span class="node-o">&#9673;</span>DEVILLE</h1>
+      <p class="tagline animate-in delay-2">Your neighborhood mesh network</p>
+    </header>
 
-    <nav class="nav-cards">
-      <a href="/get-device/" class="nav-card">
-        <span class="icon">📦</span>
-        <span class="title">I need a device</span>
-        <span class="subtitle">What to buy and where to get it</span>
-        <span class="meta">
-          <span class="time">3 min read</span>
-          <span class="arrow">→</span>
-        </span>
-      </a>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero">
+      <h2 class="hero__title animate-in delay-2">
+        Send messages<br>
+        <span class="highlight">without cell service</span>
+      </h2>
+      <p class="hero__subtitle animate-in delay-3">
+        Nodeville is Nashville's community mesh network. Your messages hop between
+        neighbors' devices until they arrive — no towers, no internet, no monthly bills.
+      </p>
+      <div class="hero__features animate-in delay-4">
+        <div class="hero__feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>No internet required</span>
+        </div>
+        <div class="hero__feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>End-to-end encrypted</span>
+        </div>
+        <div class="hero__feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>~$40 one-time cost</span>
+        </div>
+      </div>
+    </section>
 
-      <a href="/setup/" class="nav-card">
-        <span class="icon">🚀</span>
-        <span class="title">I have a device</span>
-        <span class="subtitle">Get connected to the Nashville mesh</span>
-        <span class="meta">
-          <span class="time">5 min setup</span>
-          <span class="arrow">→</span>
-        </span>
-      </a>
+    <!-- ==================== DIVIDER ==================== -->
+    <div class="node-divider">
+      <div class="node-divider__dot node-divider__dot--active"></div>
+      <div class="node-divider__line"></div>
+      <div class="node-divider__dot"></div>
+      <div class="node-divider__line"></div>
+      <div class="node-divider__dot"></div>
+      <div class="node-divider__line"></div>
+      <div class="node-divider__dot"></div>
+      <div class="node-divider__line"></div>
+      <div class="node-divider__dot node-divider__dot--active"></div>
+    </div>
 
-      <a href="/encrypt/" class="nav-card">
-        <span class="icon">🔐</span>
-        <span class="title">Create encrypted chat</span>
-        <span class="subtitle">Private messaging for you and your contacts</span>
-        <span class="meta">
-          <span class="time">3 min</span>
-          <span class="arrow">→</span>
-        </span>
-      </a>
+    <!-- ==================== PATHS SECTION ==================== -->
+    <section class="section">
+      <div class="section__header">
+        <p class="section__label">Choose Your Path</p>
+        <h3 class="section__title">Where are you starting?</h3>
+      </div>
 
-      <a href="/advanced/" class="nav-card">
-        <span class="icon">⚙️</span>
-        <span class="title">Advanced settings</span>
-        <span class="subtitle">Battery optimization, privacy, MQTT</span>
-        <span class="meta">
-          <span class="time">10 min</span>
-          <span class="arrow">→</span>
-        </span>
-      </a>
-    </nav>
+      <div class="card-grid">
+        <a href="/get-device/" class="card">
+          <div class="card__icon">&#128230;</div>
+          <h4 class="card__title">I Need a Device</h4>
+          <p class="card__description">What to buy and where to get it. No soldering required — just unbox and go.</p>
+          <div class="card__footer">
+            <span class="card__time">3 min read</span>
+            <span class="card__arrow">&rarr;</span>
+          </div>
+        </a>
 
-    <p class="skip-link">
-      Just want the QR code? <a href="/qr/">Scan here →</a>
-    </p>
+        <a href="/setup/" class="card">
+          <div class="card__icon">&#128640;</div>
+          <h4 class="card__title">I Have a Device</h4>
+          <p class="card__description">Connect to the Nashville mesh in 5 minutes. Scan one QR code and you're in.</p>
+          <div class="card__footer">
+            <span class="card__time">5 min setup</span>
+            <span class="card__arrow">&rarr;</span>
+          </div>
+        </a>
 
-    <div class="divider"><span class="node">◉</span></div>
+        <a href="/encrypt/" class="card">
+          <div class="card__icon">&#128274;</div>
+          <h4 class="card__title">Private Messaging</h4>
+          <p class="card__description">Create encrypted conversations only you and your contacts can read.</p>
+          <div class="card__footer">
+            <span class="card__time">3 min read</span>
+            <span class="card__arrow">&rarr;</span>
+          </div>
+        </a>
 
+        <a href="/advanced/" class="card">
+          <div class="card__icon">&#9881;</div>
+          <h4 class="card__title">Advanced Settings</h4>
+          <p class="card__description">Battery optimization, privacy controls, MQTT bridges, and power user configs.</p>
+          <div class="card__footer">
+            <span class="card__time">10 min read</span>
+            <span class="card__arrow">&rarr;</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== INFO BOX ==================== -->
     <div class="info-box">
-      <div class="info-box-header">
-        <span class="info-box-title">🤔 What is a mesh network?</span>
-        <span class="info-box-toggle">▼</span>
+      <div class="info-box__header">
+        <span class="info-box__icon">&#128161;</span>
+        <span class="info-box__title">How does mesh networking work?</span>
       </div>
-      <div class="info-box-content">
-        <p>
-          Traditional networks rely on cell towers and internet infrastructure.
-          If those go down, you lose communication.
+      <p class="info-box__content">
+        Each device is a node. When you send a message, it hops from node to node until it
+        reaches the destination — like passing a note through a crowd. More nodes = better coverage.
+        The network belongs to everyone who uses it.
+      </p>
+    </div>
+
+    <!-- ==================== QUICK START QR ==================== -->
+    <section class="section qr-section">
+      <div class="section__header">
+        <p class="section__label">Quick Start</p>
+        <h3 class="section__title">Just want the network QR?</h3>
+      </div>
+
+      <p class="qr-section__intro">
+        If you already have a Meshtastic device and the app installed, scan this to join Nashville:
+      </p>
+
+      <div class="qr-container">
+        <div class="qr-placeholder">[QR CODE]</div>
+      </div>
+
+      <div class="code-block">
+        <span class="code-block__text">https://meshtastic.org/e/#CgUYAyIBAQ...</span>
+        <button class="code-block__copy" title="Copy URL">&#128203;</button>
+      </div>
+
+      <div class="info-box info-box--warning">
+        <div class="info-box__header">
+          <span class="info-box__icon">&#9888;</span>
+          <span class="info-box__title">Change your Bluetooth PIN</span>
+        </div>
+        <p class="info-box__content">
+          The default PIN (123456) lets anyone nearby connect to your device. After joining,
+          go to Settings &rarr; Bluetooth and set a unique PIN.
         </p>
-        <p>
-          A mesh network is different. Each device can relay messages to others,
-          creating a web of connections. If one path fails, messages find another way through.
-        </p>
-        <p>
-          <strong>Think of it like passing notes in class</strong> — your message can hop
-          from person to person until it reaches its destination, even if you can't
-          directly reach them yourself.
-        </p>
+      </div>
+    </section>
+
+    <!-- ==================== STEP INDICATOR DEMO ==================== -->
+    <section class="section">
+      <div class="section__header">
+        <p class="section__label">Setup Progress</p>
+        <h3 class="section__title">Step indicator preview</h3>
+      </div>
+
+      <div class="steps">
+        <div class="step__dot step__dot--complete"></div>
+        <div class="step__line step__line--complete"></div>
+        <div class="step__dot step__dot--complete"></div>
+        <div class="step__line step__line--complete"></div>
+        <div class="step__dot step__dot--current"></div>
+        <div class="step__line"></div>
+        <div class="step__dot"></div>
+        <div class="step__line"></div>
+        <div class="step__dot"></div>
+      </div>
+      <p class="step__label">Step 3 of 5 — Join the Network</p>
+    </section>
+
+    <!-- ==================== COLLAPSIBLE DEMO ==================== -->
+    <div class="collapsible collapsible--open" onclick="this.classList.toggle('collapsible--open')">
+      <div class="collapsible__header">
+        <span class="collapsible__icon">&#128295;</span>
+        <span class="collapsible__title">What does the QR code configure?</span>
+        <span class="collapsible__arrow">&#9660;</span>
+      </div>
+      <div class="collapsible__content">
+        <strong>Region:</strong> US (legal frequencies for North America)<br>
+        <strong>Modem Preset:</strong> Medium Fast (balanced range & speed)<br>
+        <strong>Hop Limit:</strong> 6 (messages relay up to 6 times)<br>
+        <strong>Primary Channel:</strong> Nashville public mesh<br>
+        <strong>MQTT:</strong> Enabled for internet bridging
       </div>
     </div>
 
-    <div class="info-box">
-      <div class="info-box-header">
-        <span class="info-box-title">🔒 Is it really encrypted?</span>
-        <span class="info-box-toggle">▼</span>
+    <div class="collapsible" onclick="this.classList.toggle('collapsible--open')">
+      <div class="collapsible__header">
+        <span class="collapsible__icon">&#10067;</span>
+        <span class="collapsible__title">Troubleshooting</span>
+        <span class="collapsible__arrow">&#9660;</span>
       </div>
-      <div class="info-box-content">
-        <p>
-          Yes. Meshtastic uses AES-256 encryption — the same standard used by banks
-          and governments. Messages are encrypted before they leave your phone and
-          can only be decrypted by devices with the same key.
-        </p>
-        <p>
-          The public channel uses a shared key (everyone can read it), but you can
-          create private channels with unique keys that only you and your contacts know.
-        </p>
+      <div class="collapsible__content">
+        <strong>QR code not scanning?</strong><br>
+        Make sure Bluetooth is connected first. Try copying the URL and opening it in a browser.<br><br>
+        <strong>"Open with Meshtastic" not appearing?</strong><br>
+        Go to Android Settings &rarr; Apps &rarr; Meshtastic &rarr; Open by default &rarr; Enable meshtastic.org links.
       </div>
     </div>
 
-  </main>
+    <!-- ==================== BUTTONS DEMO ==================== -->
+    <section class="section">
+      <div class="section__header">
+        <p class="section__label">Actions</p>
+        <h3 class="section__title">Button styles</h3>
+      </div>
 
-  <footer class="site-footer">
-    <div class="footer-links">
-      <a href="/generate/">QR Generator</a>
-      <a href="https://meshtastic.org" target="_blank" rel="noopener">Meshtastic.org</a>
-      <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
-    </div>
-    <p class="footer-text">
-      ◉───◉───◉───◉ Messages find a way.
-    </p>
-  </footer>
+      <div class="btn-group">
+        <a href="/setup/" class="btn btn--primary">Get Started &rarr;</a>
+        <a href="/about/" class="btn btn--secondary">Learn More</a>
+        <a href="/qr/" class="btn btn--ghost">Skip to QR code &rarr;</a>
+      </div>
+    </section>
 
-  <script src="/js/main.js"></script>
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="site-footer">
+      <nav class="footer__links">
+        <a href="/setup/" class="footer__link">Setup Guide</a>
+        <a href="/encrypt/" class="footer__link">Encryption</a>
+        <a href="/advanced/" class="footer__link">Advanced</a>
+        <a href="/qr/" class="footer__link">Network QR</a>
+      </nav>
+      <p class="footer__credit">
+        Part of the <a href="https://hyphae.social">Hyphae Network</a> &middot; Built for Nashville
+      </p>
+    </footer>
+
+  </div>
+
 </body>
 </html>
