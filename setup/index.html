@@ -3,366 +3,590 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup - NODEVILLE</title>
-  <meta name="description" content="Connect your Meshtastic device to the Nashville mesh network.">
-  <meta name="theme-color" content="#E85D04">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+  <title>Setup — Nodeville</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --signal-orange: #E85D04;
+      --signal-orange-dark: #C44E03;
+      --signal-orange-glow: rgba(232, 93, 4, 0.15);
+      --static-green: #06D6A0;
+      --static-green-dim: rgba(6, 214, 160, 0.12);
+      --asphalt: #1A1A22;
+      --concrete: #24242E;
+      --gravel: #32323E;
+      --steel: #4A4A58;
+      --fog: #8A8A9A;
+      --chalk: #CDCDD8;
+      --white: #F5F5F7;
+      --error: #EF476F;
+      --warning: #FFD166;
+
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--asphalt);
+      color: var(--chalk);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--gravel) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    /* NAV */
+    .nav {
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .nav__back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 14px;
+      color: var(--fog);
+      transition: color 0.2s ease;
+    }
+
+    .nav__back:hover { color: var(--signal-orange); }
+
+    /* STEP HEADER */
+    .step-header {
+      text-align: center;
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .step__dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--steel);
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .step__dot--complete {
+      background: var(--static-green);
+    }
+
+    .step__dot--current {
+      background: var(--signal-orange);
+      box-shadow: 0 0 0 4px var(--signal-orange-glow), 0 0 20px var(--signal-orange-glow);
+    }
+
+    .step__dot:hover {
+      transform: scale(1.1);
+    }
+
+    .step__line {
+      width: 48px;
+      height: 2px;
+      background: var(--steel);
+    }
+
+    .step__line--complete {
+      background: var(--static-green);
+    }
+
+    .step-header__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fog);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    /* STEP CONTENT */
+    .step-content {
+      padding-bottom: var(--space-2xl);
+    }
+
+    .step-content__icon {
+      font-size: 56px;
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .step-content__title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .step-content__subtitle {
+      text-align: center;
+      color: var(--fog);
+      font-size: 17px;
+      margin-bottom: var(--space-xl);
+    }
+
+    /* QR SECTION */
+    .qr-section {
+      text-align: center;
+      margin-bottom: var(--space-xl);
+    }
+
+    .qr-container {
+      display: inline-block;
+      background: var(--white);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      margin-bottom: var(--space-md);
+    }
+
+    .qr-placeholder {
+      width: 220px;
+      height: 220px;
+      background:
+        linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+        linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #888;
+      border-radius: var(--radius-sm);
+    }
+
+    .code-block {
+      background: var(--gravel);
+      border: 1px solid var(--steel);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-block__text {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--static-green);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .code-block__copy {
+      background: transparent;
+      border: none;
+      color: var(--fog);
+      cursor: pointer;
+      padding: var(--space-xs) var(--space-sm);
+      font-size: 14px;
+      transition: color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .code-block__copy:hover { color: var(--signal-orange); }
+
+    /* INSTRUCTIONS */
+    .instructions {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .instruction {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .instruction:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .instruction:first-child {
+      padding-top: 0;
+    }
+
+    .instruction__number {
+      width: 28px;
+      height: 28px;
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .instruction__text {
+      padding-top: 2px;
+    }
+
+    .instruction__text strong {
+      color: var(--white);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .instruction__text p {
+      color: var(--fog);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .instruction__path {
+      background: var(--asphalt);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--static-green);
+    }
+
+    /* COLLAPSIBLE */
+    .collapsible {
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+      overflow: hidden;
+    }
+
+    .collapsible__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-lg);
+      background: var(--concrete);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .collapsible__header:hover { background: var(--gravel); }
+
+    .collapsible__icon { font-size: 16px; }
+
+    .collapsible__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--chalk);
+      flex-grow: 1;
+    }
+
+    .collapsible__arrow {
+      color: var(--fog);
+      transition: transform 0.2s ease;
+      font-size: 12px;
+    }
+
+    .collapsible--open .collapsible__arrow {
+      transform: rotate(180deg);
+    }
+
+    .collapsible__content {
+      padding: var(--space-lg);
+      background: var(--concrete);
+      border-top: 1px solid var(--gravel);
+      font-size: 14px;
+      color: var(--fog);
+      line-height: 1.7;
+      display: none;
+    }
+
+    .collapsible--open .collapsible__content {
+      display: block;
+    }
+
+    /* WARNING BOX */
+    .warning-box {
+      background: var(--signal-orange-glow);
+      border: 1px solid rgba(232, 93, 4, 0.3);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .warning-box__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .warning-box__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--signal-orange);
+    }
+
+    .warning-box__content {
+      font-size: 14px;
+      color: var(--chalk);
+      line-height: 1.5;
+    }
+
+    /* NAV BUTTONS */
+    .nav-buttons {
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      padding: 16px var(--space-lg);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .btn--primary {
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      border-color: var(--signal-orange);
+    }
+
+    .btn--primary:hover {
+      background: var(--signal-orange-dark);
+      border-color: var(--signal-orange-dark);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--fog);
+      border-color: var(--gravel);
+    }
+
+    .btn--secondary:hover {
+      border-color: var(--signal-orange);
+      color: var(--signal-orange);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--gravel);
+      margin-top: var(--space-xl);
+      text-align: center;
+    }
+
+    .footer__credit {
+      font-size: 13px;
+      color: var(--steel);
+    }
+
+    .footer__credit a { color: var(--static-green); }
+
+    @media (max-width: 500px) {
+      .step-content__title { font-size: 28px; }
+      .step__line { width: 24px; }
+      .qr-placeholder { width: 180px; height: 180px; }
+      .nav-buttons { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
 
-  <main class="container">
-    <a href="/" class="back-link">← Back to home</a>
+  <div class="container">
 
-    <div class="wizard">
-      <!-- Progress Bar -->
-      <div class="wizard-progress">
-        <div class="wizard-step active"><span>1</span></div>
-        <div class="wizard-connector"></div>
-        <div class="wizard-step"><span>2</span></div>
-        <div class="wizard-connector"></div>
-        <div class="wizard-step"><span>3</span></div>
-        <div class="wizard-connector"></div>
-        <div class="wizard-step"><span>4</span></div>
-        <div class="wizard-connector"></div>
-        <div class="wizard-step"><span>5</span></div>
+    <!-- NAV -->
+    <nav class="nav">
+      <a href="/" class="nav__back">&larr; Back to Nodeville</a>
+    </nav>
+
+    <!-- STEP HEADER -->
+    <header class="step-header">
+      <div class="steps">
+        <a href="/setup/install/" class="step__dot step__dot--complete" title="Install App"></a>
+        <div class="step__line step__line--complete"></div>
+        <a href="/setup/pair/" class="step__dot step__dot--complete" title="Pair Device"></a>
+        <div class="step__line step__line--complete"></div>
+        <div class="step__dot step__dot--current" title="Join Network"></div>
+        <div class="step__line"></div>
+        <a href="/setup/name/" class="step__dot" title="Set Name"></a>
+        <div class="step__line"></div>
+        <a href="/setup/secure/" class="step__dot" title="Secure PIN"></a>
+      </div>
+      <p class="step-header__label">Step 3 of 5</p>
+    </header>
+
+    <!-- STEP CONTENT -->
+    <main class="step-content">
+
+      <div class="step-content__icon">&#128225;</div>
+      <h1 class="step-content__title">Join the Network</h1>
+      <p class="step-content__subtitle">Scan this code to configure your device for the Nashville mesh.</p>
+
+      <!-- QR CODE -->
+      <div class="qr-section">
+        <div class="qr-container">
+          <div class="qr-placeholder">[QR CODE]</div>
+        </div>
+        <div class="code-block">
+          <span class="code-block__text">https://meshtastic.org/e/#CgUYAyIBAQ...</span>
+          <button class="code-block__copy" title="Copy URL">&#128203;</button>
+        </div>
       </div>
 
-      <!-- Step 1: Install App -->
-      <div class="step-content active" id="step-1">
-        <div class="step-header">
-          <span class="step-indicator">Step 1 of 5</span>
-          <span class="icon">📱</span>
-          <h1>Install the App</h1>
+      <!-- INSTRUCTIONS -->
+      <div class="instructions">
+        <div class="instruction">
+          <div class="instruction__number">1</div>
+          <div class="instruction__text">
+            <strong>Open the Meshtastic app</strong>
+            <p>Make sure your device is connected via Bluetooth</p>
+          </div>
         </div>
+        <div class="instruction">
+          <div class="instruction__number">2</div>
+          <div class="instruction__text">
+            <strong>Tap the QR scanner icon</strong>
+            <p>Or go to <span class="instruction__path">Settings &rarr; Channels &rarr; Scan QR</span></p>
+          </div>
+        </div>
+        <div class="instruction">
+          <div class="instruction__number">3</div>
+          <div class="instruction__text">
+            <strong>Point your camera at the code above</strong>
+            <p>Or paste the URL if the camera isn't working</p>
+          </div>
+        </div>
+        <div class="instruction">
+          <div class="instruction__number">4</div>
+          <div class="instruction__text">
+            <strong>Choose "Replace All Channels"</strong>
+            <p>This applies the full Nashville network configuration</p>
+          </div>
+        </div>
+        <div class="instruction">
+          <div class="instruction__number">5</div>
+          <div class="instruction__text">
+            <strong>Wait for reboot</strong>
+            <p>Your device restarts with new settings (~10 seconds)</p>
+          </div>
+        </div>
+      </div>
 
-        <p>
-          The Meshtastic app connects your phone to your device via Bluetooth.
-          Download it for your platform:
+      <!-- COLLAPSIBLES -->
+      <div class="collapsible collapsible--open" onclick="this.classList.toggle('collapsible--open')">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#128295;</span>
+          <span class="collapsible__title">What does this configure?</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          <strong>Region:</strong> US (legal frequencies for North America)<br>
+          <strong>Modem Preset:</strong> Medium Fast (balanced range & speed)<br>
+          <strong>Hop Limit:</strong> 6 (messages relay up to 6 times)<br>
+          <strong>Primary Channel:</strong> Nashville public mesh (blank name = TN convention)<br>
+          <strong>MQTT:</strong> Enabled for internet bridging<br>
+          <strong>Position Precision:</strong> ~1.5km (city-level, not exact)
+        </div>
+      </div>
+
+      <div class="collapsible" onclick="this.classList.toggle('collapsible--open')">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#10067;</span>
+          <span class="collapsible__title">Troubleshooting</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          <strong>QR code not scanning?</strong><br>
+          Make sure your device is connected via Bluetooth first. Try copying the URL instead.<br><br>
+          <strong>"Open with Meshtastic" not appearing?</strong><br>
+          Android: Settings &rarr; Apps &rarr; Meshtastic &rarr; Open by default &rarr; Enable meshtastic.org<br><br>
+          <strong>Nothing happening after scan?</strong><br>
+          Check the Meshtastic app for a confirmation popup. You may need to approve the channel change.
+        </div>
+      </div>
+
+      <!-- WARNING -->
+      <div class="warning-box">
+        <div class="warning-box__header">
+          <span>&#9888;</span>
+          <span class="warning-box__title">Important: You're not done yet</span>
+        </div>
+        <p class="warning-box__content">
+          After joining the network, you still need to set your name and change your Bluetooth PIN for security. Don't skip the next two steps.
         </p>
-
-        <div class="app-badges">
-          <a href="https://apps.apple.com/app/meshtastic/id1586432531"
-             class="app-badge" target="_blank" rel="noopener">
-            <span class="store-icon"></span>
-            <div>
-              <span class="store-text">Download on the</span>
-              <span class="store-name">App Store</span>
-            </div>
-          </a>
-          <a href="https://play.google.com/store/apps/details?id=com.geeksville.mesh"
-             class="app-badge" target="_blank" rel="noopener">
-            <span class="store-icon">▶️</span>
-            <div>
-              <span class="store-text">Get it on</span>
-              <span class="store-name">Google Play</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box-header">
-            <span class="info-box-title">🤔 Why do I need an app?</span>
-            <span class="info-box-toggle">▼</span>
-          </div>
-          <div class="info-box-content">
-            <p>
-              Your Meshtastic device is just a radio — it has no screen for typing messages.
-              The app connects via Bluetooth and gives you a messaging interface.
-            </p>
-            <p>
-              <strong>Think of it like how AirPods need your phone to play music.</strong>
-            </p>
-          </div>
-        </div>
-
-        <div class="step-nav">
-          <span></span>
-          <button class="btn btn-primary" data-wizard-next>Next →</button>
-        </div>
       </div>
 
-      <!-- Step 2: Pair Device -->
-      <div class="step-content" id="step-2">
-        <div class="step-header">
-          <span class="step-indicator">Step 2 of 5</span>
-          <span class="icon">🔌</span>
-          <h1>Power On & Pair</h1>
-        </div>
-
-        <div class="instructions">
-          <ol>
-            <li>Charge your device (magnetic cable for T1000-E, USB-C for others)</li>
-            <li>Power on: <strong>Hold button for 5 seconds</strong> until you hear a melody</li>
-            <li>Open the Meshtastic app on your phone</li>
-            <li>Go to <code>Settings → Connections → Bluetooth</code></li>
-            <li>Select your device from the list</li>
-            <li>Enter PIN: <code>123456</code></li>
-          </ol>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box-header">
-            <span class="info-box-title">❌ Troubleshooting</span>
-            <span class="info-box-toggle">▼</span>
-          </div>
-          <div class="info-box-content">
-            <div class="troubleshooting">
-              <div class="troubleshoot-item">
-                <div class="troubleshoot-problem">Device not showing up?</div>
-                <div class="troubleshoot-solution">
-                  Make sure Bluetooth is enabled on your phone. Bring the device within
-                  a few feet. Try restarting the device (hold button 10 sec).
-                </div>
-              </div>
-              <div class="troubleshoot-item">
-                <div class="troubleshoot-problem">Solid green light on T1000-E?</div>
-                <div class="troubleshoot-solution">
-                  That's firmware update mode. Disconnect charger and restart the device.
-                </div>
-              </div>
-              <div class="troubleshoot-item">
-                <div class="troubleshoot-problem">Wrong PIN?</div>
-                <div class="troubleshoot-solution">
-                  Default is <code>123456</code> for most devices.
-                  We'll change this in Step 5 for security.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-nav">
-          <button class="btn btn-ghost" data-wizard-back>← Back</button>
-          <button class="btn btn-primary" data-wizard-next>Next →</button>
-        </div>
+      <!-- NAVIGATION -->
+      <div class="nav-buttons">
+        <a href="/setup/pair/" class="btn btn--secondary">&larr; Back</a>
+        <a href="/setup/name/" class="btn btn--primary">Next: Set Your Name &rarr;</a>
       </div>
 
-      <!-- Step 3: Join Network -->
-      <div class="step-content" id="step-3">
-        <div class="step-header">
-          <span class="step-indicator">Step 3 of 5</span>
-          <span class="icon">📡</span>
-          <h1>Join the Network</h1>
-        </div>
+    </main>
 
-        <p>
-          Scan this QR code with the Meshtastic app to configure your device
-          for the Nashville network.
-        </p>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p class="footer__credit">
+        Part of the <a href="https://hyphae.social">Hyphae Network</a> &middot; Built for Nashville
+      </p>
+    </footer>
 
-        <div class="qr-wrapper">
-          <div class="qr-container">
-            <canvas id="network-qr" data-qr="network" data-size="256"></canvas>
-          </div>
-        </div>
+  </div>
 
-        <p style="text-align: center;">Or open this link on your phone:</p>
-
-        <div class="copy-group">
-          <code id="network-url" data-network-url>Loading...</code>
-          <button class="copy-btn" data-copy-target="network-url">📋 Copy</button>
-        </div>
-
-        <div class="instructions">
-          <ol>
-            <li>In the Meshtastic app, tap the <strong>QR icon</strong> (or go to Settings → Channels)</li>
-            <li>Tap <strong>"Scan QR Code"</strong></li>
-            <li>Point camera at the code above</li>
-            <li>When prompted, choose <strong>"Replace All Channels"</strong></li>
-            <li>Wait for device to reboot (~10 seconds)</li>
-          </ol>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box-header">
-            <span class="info-box-title">🔧 What this configures</span>
-            <span class="info-box-toggle">▼</span>
-          </div>
-          <div class="info-box-content">
-            <div class="config-display">
-              <div class="config-item">
-                <span class="config-key">Region</span>
-                <span class="config-value">US (legal frequencies)</span>
-              </div>
-              <div class="config-item">
-                <span class="config-key">Speed</span>
-                <span class="config-value">Medium Fast</span>
-              </div>
-              <div class="config-item">
-                <span class="config-key">Hop Limit</span>
-                <span class="config-value">6 (relays up to 6 times)</span>
-              </div>
-              <div class="config-item">
-                <span class="config-key">Primary Channel</span>
-                <span class="config-value">Nashville public mesh</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step-nav">
-          <button class="btn btn-ghost" data-wizard-back>← Back</button>
-          <button class="btn btn-primary" data-wizard-next>Next →</button>
-        </div>
-      </div>
-
-      <!-- Step 4: Set Name -->
-      <div class="step-content" id="step-4">
-        <div class="step-header">
-          <span class="step-indicator">Step 4 of 5</span>
-          <span class="icon">👤</span>
-          <h1>Set Your Name</h1>
-        </div>
-
-        <p>This is how you appear to others on the mesh.</p>
-
-        <div class="instructions">
-          <ol>
-            <li>Go to <code>Settings → User</code></li>
-            <li>Set <strong>Long Name</strong>: Your display name (e.g., "Sarah M")</li>
-            <li>Set <strong>Short Name</strong>: 4 characters max (e.g., "SARA")</li>
-            <li>Tap <strong>Save</strong></li>
-          </ol>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box-header">
-            <span class="info-box-title">💡 Tips</span>
-            <span class="info-box-toggle">▼</span>
-          </div>
-          <div class="info-box-content">
-            <ul>
-              <li><strong>Long Name:</strong> Use something recognizable to friends</li>
-              <li><strong>Short Name:</strong> Shows on devices with small screens</li>
-              <li>You can change these anytime</li>
-              <li>Emoji work in names! 🌿</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="step-nav">
-          <button class="btn btn-ghost" data-wizard-back>← Back</button>
-          <button class="btn btn-primary" data-wizard-next>Next →</button>
-        </div>
-      </div>
-
-      <!-- Step 5: Secure PIN -->
-      <div class="step-content" id="step-5">
-        <div class="step-header">
-          <span class="step-indicator">Step 5 of 5</span>
-          <span class="icon">🔐</span>
-          <h1>Secure Your Device</h1>
-        </div>
-
-        <div class="alert alert-warning">
-          <span class="alert-icon">⚠️</span>
-          <div class="alert-content">
-            <p>
-              <strong>The default Bluetooth PIN (123456) is public.</strong>
-              Anyone nearby could connect to your device. Change it now.
-            </p>
-          </div>
-        </div>
-
-        <div class="instructions">
-          <ol>
-            <li>Go to <code>Settings → Radio Config → Bluetooth</code></li>
-            <li>Tap <strong>"Fixed PIN"</strong></li>
-            <li>Enter a new 6-digit PIN (something you'll remember)</li>
-            <li>Tap <strong>Save</strong></li>
-            <li>Device will reboot</li>
-          </ol>
-        </div>
-
-        <div class="alert alert-info">
-          <span class="alert-icon">📝</span>
-          <div class="alert-content">
-            <p>
-              <strong>Write down your PIN somewhere safe.</strong>
-              You'll need it if you re-pair or use a new phone.
-            </p>
-          </div>
-        </div>
-
-        <div class="info-box">
-          <div class="info-box-header">
-            <span class="info-box-title">🤔 Why does this matter?</span>
-            <span class="info-box-toggle">▼</span>
-          </div>
-          <div class="info-box-content">
-            <p>Anyone within ~30 feet with the Meshtastic app could:</p>
-            <ul>
-              <li>Connect to your device</li>
-              <li>Read your messages</li>
-              <li>Change your settings</li>
-              <li>Send messages as you</li>
-            </ul>
-            <p><strong>A custom PIN prevents this.</strong></p>
-          </div>
-        </div>
-
-        <div class="step-nav">
-          <button class="btn btn-ghost" data-wizard-back>← Back</button>
-          <button class="btn btn-primary" data-wizard-next>Complete Setup →</button>
-        </div>
-      </div>
-
-      <!-- Complete Screen -->
-      <div class="step-content" id="step-complete">
-        <div class="success-state">
-          <div class="success-icon">✓</div>
-          <h2>You're on the mesh!</h2>
-          <p>
-            Your device is configured and connected to Nodeville.
-          </p>
-        </div>
-
-        <div class="config-display">
-          <div class="config-item">
-            <span class="config-key">📡 Public channel</span>
-            <span class="config-value">Active</span>
-          </div>
-          <div class="config-item">
-            <span class="config-key">🔐 Bluetooth</span>
-            <span class="config-value">Secured</span>
-          </div>
-        </div>
-
-        <p style="text-align: center; margin-top: 2rem;">
-          Anyone on the mesh can see messages on the public channel.
-          For private conversations, create encrypted channels.
-        </p>
-
-        <div style="text-align: center; margin-top: 2rem;">
-          <a href="/encrypt/" class="btn btn-primary">Create Encrypted Chat →</a>
-        </div>
-
-        <div class="divider"><span class="node">◉</span></div>
-
-        <div class="nav-cards">
-          <a href="/advanced/" class="nav-card">
-            <span class="icon">⚙️</span>
-            <span class="title">Advanced settings</span>
-            <span class="subtitle">Battery optimization, privacy, MQTT</span>
-            <span class="meta">
-              <span class="arrow">→</span>
-            </span>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <p class="footer-text">
-      ◉───◉───◉───◉ Messages find a way.
-    </p>
-  </footer>
-
-  <script src="/js/qr-generator.js"></script>
-  <script src="/js/main.js"></script>
 </body>
 </html>

@@ -3,158 +3,564 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Get a Device - NODEVILLE</title>
-  <meta name="description" content="Recommended Meshtastic devices for the Nashville mesh network.">
-  <meta name="theme-color" content="#E85D04">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Get a Device — Nodeville</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --signal-orange: #E85D04;
+      --signal-orange-dark: #C44E03;
+      --signal-orange-glow: rgba(232, 93, 4, 0.15);
+      --static-green: #06D6A0;
+      --static-green-dim: rgba(6, 214, 160, 0.12);
+      --asphalt: #1A1A22;
+      --concrete: #24242E;
+      --gravel: #32323E;
+      --steel: #4A4A58;
+      --fog: #8A8A9A;
+      --chalk: #CDCDD8;
+      --white: #F5F5F7;
+      --error: #EF476F;
+      --warning: #FFD166;
+
+      --font-display: 'Barlow Condensed', sans-serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--asphalt);
+      color: var(--chalk);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, var(--gravel) 1px, transparent 1px);
+      background-size: 32px 32px;
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    /* NAV */
+    .nav {
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--gravel);
+      margin-bottom: var(--space-xl);
+    }
+
+    .nav__back {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 14px;
+      color: var(--fog);
+      transition: color 0.2s ease;
+    }
+
+    .nav__back:hover {
+      color: var(--signal-orange);
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      text-align: center;
+      padding: var(--space-xl) 0 var(--space-2xl);
+    }
+
+    .page-header__icon {
+      font-size: 48px;
+      margin-bottom: var(--space-md);
+    }
+
+    .page-header__title {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-header__subtitle {
+      font-size: 17px;
+      color: var(--fog);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* PRODUCT CARDS */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .product-card {
+      background: var(--concrete);
+      border: 2px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .product-card--recommended {
+      border-color: var(--signal-orange);
+    }
+
+    .product-card--recommended::before {
+      content: 'RECOMMENDED';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: 100px;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-card__image {
+      width: 100%;
+      height: 160px;
+      background: var(--gravel);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      margin-bottom: var(--space-md);
+    }
+
+    .product-card__name {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-xs);
+    }
+
+    .product-card__price {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--static-green);
+      margin-bottom: var(--space-md);
+    }
+
+    .product-card__specs {
+      list-style: none;
+      margin-bottom: var(--space-lg);
+    }
+
+    .product-card__spec {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--gravel);
+      font-size: 14px;
+      color: var(--fog);
+    }
+
+    .product-card__spec:last-child {
+      border-bottom: none;
+    }
+
+    .product-card__spec-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .product-card__spec-value {
+      margin-left: auto;
+      color: var(--chalk);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .product-card__cta {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      font-weight: 600;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .product-card__cta:hover {
+      background: var(--signal-orange-dark);
+    }
+
+    /* COMPARISON TABLE */
+    .comparison {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .comparison__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-md);
+    }
+
+    .comparison__table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .comparison__table th,
+    .comparison__table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .comparison__table th {
+      color: var(--fog);
+      font-weight: 500;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .comparison__table td {
+      color: var(--chalk);
+    }
+
+    .comparison__table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison__winner {
+      color: var(--static-green);
+      font-weight: 600;
+    }
+
+    /* INFO BOX */
+    .info-box {
+      background: var(--static-green-dim);
+      border: 1px solid rgba(6, 214, 160, 0.25);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin: var(--space-xl) 0;
+    }
+
+    .info-box__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .info-box__title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--static-green);
+    }
+
+    .info-box__content {
+      font-size: 14px;
+      color: var(--chalk);
+      line-height: 1.6;
+    }
+
+    /* NEXT STEP */
+    .next-step {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--gravel);
+    }
+
+    .next-step__label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--fog);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-sm);
+    }
+
+    .next-step__title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-md);
+    }
+
+    .next-step__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 14px 32px;
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .next-step__btn:hover {
+      background: var(--signal-orange-dark);
+      transform: translateY(-2px);
+    }
+
+    /* FOOTER */
+    .site-footer {
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--gravel);
+      text-align: center;
+    }
+
+    .footer__credit {
+      font-size: 13px;
+      color: var(--steel);
+    }
+
+    .footer__credit a {
+      color: var(--static-green);
+    }
+
+    @media (max-width: 600px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-header__title {
+        font-size: 32px;
+      }
+
+      .comparison__table {
+        font-size: 12px;
+      }
+
+      .comparison__table th,
+      .comparison__table td {
+        padding: var(--space-sm);
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <main class="container">
-    <a href="/" class="back-link">← Back to home</a>
+  <div class="container">
 
-    <div class="page-header">
-      <span class="icon">📦</span>
-      <h1>Get a Device</h1>
-      <p class="subtitle">No soldering. No antennas. No 3D printing.</p>
-    </div>
+    <!-- NAV -->
+    <nav class="nav">
+      <a href="/" class="nav__back">&larr; Back to Nodeville</a>
+    </nav>
 
-    <p>
-      We recommend card-sized devices that work out of the box. They fit in your
-      pocket, cost around $40, and come pre-installed with Meshtastic.
-    </p>
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <div class="page-header__icon">&#128230;</div>
+      <h1 class="page-header__title">Get a Device</h1>
+      <p class="page-header__subtitle">
+        No soldering required. These pocket-sized devices work out of the box with the Meshtastic app.
+      </p>
+    </header>
 
-    <div class="device-cards">
-      <!-- Recommended Device -->
-      <div class="device-card recommended">
-        <span class="badge">Recommended</span>
-        <h3>Seeed T1000-E</h3>
-        <div class="device-specs">
-          <div class="device-spec">
-            <span class="label">Price</span>
-            <span class="value">~$40</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Best for</span>
-            <span class="value">Range, simplicity</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Battery</span>
-            <span class="value">700mAh (~2 days)</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Size</span>
-            <span class="value">Credit card</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Waterproof</span>
-            <span class="value">IP65</span>
-          </div>
-        </div>
-        <ul class="device-features">
-          <li>Best range out of the box</li>
-          <li>Built-in GPS, buzzer, temperature sensor</li>
-          <li>Comes pre-flashed with Meshtastic</li>
-          <li>Magnetic charging cable</li>
+    <!-- PRODUCT CARDS -->
+    <div class="product-grid">
+
+      <div class="product-card product-card--recommended">
+        <div class="product-card__image">&#128225;</div>
+        <h2 class="product-card__name">Seeed T1000-E</h2>
+        <p class="product-card__price">~$40</p>
+        <ul class="product-card__specs">
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128246;</span>
+            <span>Range</span>
+            <span class="product-card__spec-value">1.8 km</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128267;</span>
+            <span>Battery</span>
+            <span class="product-card__spec-value">700mAh (~2 days)</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128205;</span>
+            <span>GPS</span>
+            <span class="product-card__spec-value">Built-in</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128167;</span>
+            <span>Waterproof</span>
+            <span class="product-card__spec-value">IP65</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128276;</span>
+            <span>Buzzer</span>
+            <span class="product-card__spec-value">Yes</span>
+          </li>
         </ul>
-        <a href="https://www.seeedstudio.com/SenseCAP-Card-Tracker-T1000-E-for-Meshtastic-p-5913.html"
-           class="btn btn-primary btn-full" target="_blank" rel="noopener">
-          Buy from Seeed Studio →
+        <a href="https://www.seeedstudio.com/SenseCAP-Card-Tracker-T1000-E-p-5913.html" class="product-card__cta">
+          Buy from Seeed &rarr;
         </a>
       </div>
 
-      <!-- Alternative Device -->
-      <div class="device-card">
-        <h3>WisMesh Tag</h3>
-        <div class="device-specs">
-          <div class="device-spec">
-            <span class="label">Price</span>
-            <span class="value">~$40</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Best for</span>
-            <span class="value">Battery life, waterproofing</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Battery</span>
-            <span class="value">1000mAh (~3 days)</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Size</span>
-            <span class="value">Credit card</span>
-          </div>
-          <div class="device-spec">
-            <span class="label">Waterproof</span>
-            <span class="value">IP66</span>
-          </div>
-        </div>
-        <ul class="device-features">
-          <li>Longer battery life</li>
-          <li>Better waterproofing</li>
-          <li>Faster GPS lock</li>
-          <li>USB-C charging</li>
+      <div class="product-card">
+        <div class="product-card__image">&#127991;</div>
+        <h2 class="product-card__name">WisMesh Tap/Tag</h2>
+        <p class="product-card__price">~$40</p>
+        <ul class="product-card__specs">
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128246;</span>
+            <span>Range</span>
+            <span class="product-card__spec-value">500-600m</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128267;</span>
+            <span>Battery</span>
+            <span class="product-card__spec-value">1000mAh (~3 days)</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128205;</span>
+            <span>GPS</span>
+            <span class="product-card__spec-value">Built-in</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#128167;</span>
+            <span>Waterproof</span>
+            <span class="product-card__spec-value">IP66</span>
+          </li>
+          <li class="product-card__spec">
+            <span class="product-card__spec-icon">&#9889;</span>
+            <span>GPS Lock</span>
+            <span class="product-card__spec-value">Faster</span>
+          </li>
         </ul>
-        <a href="https://store.rakwireless.com/products/wismesh-tag"
-           class="btn btn-secondary btn-full" target="_blank" rel="noopener">
-          Buy from WisMesh →
+        <a href="https://store.rakwireless.com/products/wismesh-tap" class="product-card__cta">
+          Buy from RAK &rarr;
         </a>
       </div>
+
     </div>
 
+    <!-- COMPARISON -->
+    <div class="comparison">
+      <h3 class="comparison__title">Quick Comparison</h3>
+      <table class="comparison__table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>T1000-E</th>
+            <th>WisMesh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Range</td>
+            <td class="comparison__winner">1.8 km &#10003;</td>
+            <td>500-600m</td>
+          </tr>
+          <tr>
+            <td>Battery Life</td>
+            <td>~2 days</td>
+            <td class="comparison__winner">~3 days &#10003;</td>
+          </tr>
+          <tr>
+            <td>Waterproofing</td>
+            <td>IP65</td>
+            <td class="comparison__winner">IP66 &#10003;</td>
+          </tr>
+          <tr>
+            <td>GPS Speed</td>
+            <td>Standard</td>
+            <td class="comparison__winner">Faster &#10003;</td>
+          </tr>
+          <tr>
+            <td>Buzzer/Alerts</td>
+            <td class="comparison__winner">Yes &#10003;</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Size</td>
+            <td>Credit card</td>
+            <td>Credit card</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- INFO BOX -->
     <div class="info-box">
-      <div class="info-box-header">
-        <span class="info-box-title">🤔 Why these devices?</span>
-        <span class="info-box-toggle">▼</span>
+      <div class="info-box__header">
+        <span>&#128161;</span>
+        <span class="info-box__title">Our recommendation</span>
       </div>
-      <div class="info-box-content">
-        <p>We recommend card-sized devices because:</p>
-        <ul>
-          <li>No external antennas to break or lose</li>
-          <li>Fits in wallet or pocket</li>
-          <li>Comes ready to use (no assembly)</li>
-          <li>Affordable ($35-45)</li>
-        </ul>
-        <p>
-          For better range, you'd need a device with an external antenna,
-          but that adds complexity. <strong>Start simple.</strong>
-        </p>
-      </div>
+      <p class="info-box__content">
+        For Nashville, we recommend the <strong>T1000-E</strong>. The 3x better range makes a real difference
+        in a spread-out city. The built-in buzzer also helps you find the device if you lose it — and
+        lets you know when messages arrive.
+      </p>
     </div>
 
-    <div class="info-box">
-      <div class="info-box-header">
-        <span class="info-box-title">🛒 Other options</span>
-        <span class="info-box-toggle">▼</span>
-      </div>
-      <div class="info-box-content">
-        <p>If these are out of stock, check:</p>
-        <ul>
-          <li><a href="https://www.amazon.com/s?k=meshtastic" target="_blank" rel="noopener">Amazon</a> (search "Meshtastic")</li>
-          <li><a href="https://www.aliexpress.com/w/wholesale-meshtastic.html" target="_blank" rel="noopener">AliExpress</a> (cheaper, longer shipping)</li>
-          <li><a href="https://meshtastic.org/docs/hardware" target="_blank" rel="noopener">Full hardware list</a> on Meshtastic.org</li>
-        </ul>
-        <p>
-          Make sure the device has <code>915MHz</code> in the description — that's the US frequency.
-        </p>
-      </div>
+    <!-- NEXT STEP -->
+    <div class="next-step">
+      <p class="next-step__label">Got your device?</p>
+      <h2 class="next-step__title">Set it up in 5 minutes</h2>
+      <a href="/setup/" class="next-step__btn">Start Setup &rarr;</a>
     </div>
 
-    <div class="divider"><span class="node">◉</span></div>
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p class="footer__credit">
+        Part of the <a href="https://hyphae.social">Hyphae Network</a> &middot; Built for Nashville
+      </p>
+    </footer>
 
-    <div style="text-align: center;">
-      <p>Already have a device?</p>
-      <a href="/setup/" class="btn btn-primary">Start Setup →</a>
-    </div>
+  </div>
 
-  </main>
-
-  <footer class="site-footer">
-    <p class="footer-text">
-      ◉───◉───◉───◉ Messages find a way.
-    </p>
-  </footer>
-
-  <script src="/js/main.js"></script>
 </body>
 </html>
