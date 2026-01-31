@@ -733,10 +733,35 @@
           <span class="info-box-title">&#128295; What this configures</span>
         </div>
         <div class="info-box-content" style="display: block;">
-          <strong>Region:</strong> US &middot; <strong>Modem:</strong> Medium Fast &middot; <strong>Hop Limit:</strong> 6<br>
+          <strong>Region:</strong> US &middot; <strong>Modem:</strong> Medium Fast &middot; <strong>Hop Limit:</strong> 7<br>
           <strong>Channel:</strong> Nashville public mesh (blank name = TN convention)<br>
-          <strong>Position Precision:</strong> ~1.5km (city-level, not your exact location)
+          <strong>OK to MQTT:</strong> Enabled (helps grow the network map)
         </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#127760;</span>
+          <span class="collapsible__title">What is "OK to MQTT"?</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          <strong>You're helping the network just by using it.</strong><br><br>
+          When "OK to MQTT" is enabled, other nodes with internet connections can forward your position and activity to the community map at <a href="https://meshmap.net" target="_blank" style="color: var(--color-accent);">meshmap.net</a>. This helps everyone see network coverage and find other users nearby.<br><br>
+          <strong>What gets shared:</strong> Your node name, approximate position (~1.5km precision), and message routing statistics.<br><br>
+          <strong>What stays private:</strong> Message contents are never shared via MQTT unless you're on a channel that explicitly uploads them.<br><br>
+          If you prefer not to appear on public maps, you can disable this later in <span class="path-code">Settings &rarr; Radio Config &rarr; LoRa &rarr; OK to MQTT</span>.
+        </div>
+      </div>
+
+      <div class="warning-box" style="background: var(--color-bg-card); border-color: var(--color-border);">
+        <div class="warning-box__header">
+          <span>&#9888;&#65039;</span>
+          <span class="warning-box__title">Heads up: This replaces your channels</span>
+        </div>
+        <p class="warning-box__content">
+          Scanning this QR code will replace all existing channels on your device. If you already have channels you want to keep, write them down first.
+        </p>
       </div>
     </section>
 

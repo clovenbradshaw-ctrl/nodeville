@@ -10,20 +10,21 @@
      Meshtastic Configuration
      ========================================================================== */
 
-  // Hyphae Mesh Nashville network defaults
+  // Nodeville Nashville network defaults
   const HYPHAE_MESH_CONFIG = {
     lora: {
       region: 1,           // US (RegionCode.US)
       modemPreset: 3,      // MEDIUM_FAST (ModemPreset.MEDIUM_FAST)
-      hopLimit: 6,
+      hopLimit: 7,         // Good coverage for Nashville metro
       txEnabled: true,
-      txPower: 30
+      txPower: 30,
+      configOkToMqtt: true // Allow MQTT gateways to forward your packets
     },
     channel: {
       name: '',            // Blank for primary per TN convention
       psk: new Uint8Array([1]), // Default public key (AQ==)
-      uplinkEnabled: true,
-      downlinkEnabled: true
+      uplinkEnabled: false,    // MQTT uplink disabled by default
+      downlinkEnabled: false   // MQTT downlink disabled by default
     }
   };
 
@@ -168,6 +169,11 @@
     // field 12: tx_power (int32)
     if (lora.txPower !== undefined) {
       parts.push(encodeUint32(12, lora.txPower));
+    }
+
+    // field 105: config_ok_to_mqtt (bool) - allows MQTT gateways to forward your packets
+    if (lora.configOkToMqtt !== undefined) {
+      parts.push(encodeBool(105, lora.configOkToMqtt));
     }
 
     return concatUint8Arrays(parts);

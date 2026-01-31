@@ -900,12 +900,12 @@
       </p>
 
       <div class="qr-container">
-        <div class="qr-placeholder">[QR CODE]</div>
+        <canvas id="home-qr" data-qr="network" data-size="200"></canvas>
       </div>
 
       <div class="code-block">
-        <span class="code-block__text">https://meshtastic.org/e/#CgUYAyIBAQ...</span>
-        <button class="code-block__copy" title="Copy URL">&#128203;</button>
+        <span class="code-block__text" id="home-network-url" data-network-url>Loading...</span>
+        <button class="code-block__copy" onclick="copyNetworkURL()" title="Copy URL">&#128203;</button>
       </div>
 
       <div class="info-box info-box--warning">
@@ -941,7 +941,7 @@
       <p class="step__label">Step 3 of 5 — Join the Network</p>
     </section>
 
-    <!-- ==================== COLLAPSIBLE DEMO ==================== -->
+    <!-- ==================== COLLAPSIBLE ==================== -->
     <div class="collapsible collapsible--open" onclick="this.classList.toggle('collapsible--open')">
       <div class="collapsible__header">
         <span class="collapsible__icon">&#128295;</span>
@@ -951,9 +951,9 @@
       <div class="collapsible__content">
         <strong>Region:</strong> US (legal frequencies for North America)<br>
         <strong>Modem Preset:</strong> Medium Fast (balanced range & speed)<br>
-        <strong>Hop Limit:</strong> 6 (messages relay up to 6 times)<br>
+        <strong>Hop Limit:</strong> 7 (messages relay up to 7 times)<br>
         <strong>Primary Channel:</strong> Nashville public mesh<br>
-        <strong>MQTT:</strong> Enabled for internet bridging
+        <strong>OK to MQTT:</strong> Enabled (lets gateway nodes share your position to meshmap.net)
       </div>
     </div>
 
@@ -999,6 +999,26 @@
     </footer>
 
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+  <script src="/js/qr-generator.js"></script>
+  <script>
+    async function copyNetworkURL() {
+      const url = document.getElementById('home-network-url').textContent;
+      const btn = document.querySelector('.code-block__copy');
+      try {
+        await navigator.clipboard.writeText(url);
+        btn.innerHTML = '&#10003;';
+        btn.style.color = 'var(--static-green)';
+        setTimeout(() => {
+          btn.innerHTML = '&#128203;';
+          btn.style.color = '';
+        }, 2000);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    }
+  </script>
 
 </body>
 </html>
