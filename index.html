@@ -4,13 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nodeville — Nashville's Mesh Network</title>
+  <meta name="description" content="Join Nashville's community mesh network. Send messages without cell service.">
+  <meta name="theme-color" content="#E85D04">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* ========================================
        NODEVILLE DESIGN SYSTEM
-       Nashville's Mesh Network
+       Nashville's Mesh Network - Single Page App
        ======================================== */
 
     :root {
@@ -35,6 +38,7 @@
       /* Status */
       --error: #EF476F;
       --warning: #FFD166;
+      --info: #118AB2;
       --success: var(--static-green);
 
       /* Typography */
@@ -81,7 +85,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Dot grid background */
     body::before {
       content: '';
       position: fixed;
@@ -104,9 +107,92 @@
 
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 0 var(--space-lg);
+    }
+
+    /* ========================================
+       NAVIGATION
+       ======================================== */
+
+    .main-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(26, 26, 34, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gravel);
+      z-index: 100;
+      padding: var(--space-sm) 0;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .nav-logo .node-o {
+      color: var(--signal-orange);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--space-xs);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-link {
+      padding: var(--space-sm) var(--space-md);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--fog);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover {
+      color: var(--white);
+      background: var(--gravel);
+    }
+
+    .nav-link.active {
+      color: var(--signal-orange);
+      background: var(--signal-orange-glow);
+    }
+
+    /* ========================================
+       SECTIONS
+       ======================================== */
+
+    .section {
+      display: none;
+      padding: var(--space-xl) 0 var(--space-3xl);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ========================================
@@ -150,34 +236,33 @@
     }
 
     /* ========================================
-       NODE DIVIDER
+       PAGE HEADERS
        ======================================== */
 
-    .node-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-sm);
-      padding: var(--space-xl) 0;
+    .page-header {
+      text-align: center;
+      padding: var(--space-xl) 0 var(--space-2xl);
     }
 
-    .node-divider__dot {
-      width: 10px;
-      height: 10px;
-      background: var(--steel);
-      border-radius: 50%;
-      transition: all 0.3s ease;
+    .page-header__icon {
+      font-size: 48px;
+      margin-bottom: var(--space-md);
     }
 
-    .node-divider__dot--active {
-      background: var(--signal-orange);
-      box-shadow: 0 0 12px var(--signal-orange);
+    .page-header__title {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: var(--space-sm);
     }
 
-    .node-divider__line {
-      width: 40px;
-      height: 2px;
-      background: var(--steel);
+    .page-header__subtitle {
+      font-size: 17px;
+      color: var(--fog);
+      max-width: 520px;
+      margin: 0 auto;
     }
 
     /* ========================================
@@ -234,35 +319,6 @@
     }
 
     /* ========================================
-       SECTION HEADERS
-       ======================================== */
-
-    .section {
-      padding: var(--space-xl) 0;
-    }
-
-    .section__header {
-      margin-bottom: var(--space-lg);
-    }
-
-    .section__label {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--fog);
-      margin-bottom: var(--space-xs);
-    }
-
-    .section__title {
-      font-family: var(--font-display);
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--white);
-    }
-
-    /* ========================================
        CARDS
        ======================================== */
 
@@ -282,6 +338,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .card::before {
@@ -361,6 +418,119 @@
     }
 
     /* ========================================
+       PRODUCT CARDS
+       ======================================== */
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .product-card {
+      background: var(--concrete);
+      border: 2px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .product-card--recommended {
+      border-color: var(--signal-orange);
+    }
+
+    .product-card--recommended::before {
+      content: 'RECOMMENDED';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: 100px;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-card__image {
+      width: 100%;
+      height: 120px;
+      background: var(--gravel);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin-bottom: var(--space-md);
+    }
+
+    .product-card__name {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-xs);
+    }
+
+    .product-card__price {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--static-green);
+      margin-bottom: var(--space-md);
+    }
+
+    .product-card__specs {
+      list-style: none;
+      margin-bottom: var(--space-lg);
+    }
+
+    .product-card__spec {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--gravel);
+      font-size: 14px;
+      color: var(--fog);
+    }
+
+    .product-card__spec:last-child {
+      border-bottom: none;
+    }
+
+    .product-card__spec-value {
+      margin-left: auto;
+      color: var(--chalk);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    .product-card__cta {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      font-weight: 600;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .product-card__cta:hover {
+      background: var(--signal-orange-dark);
+    }
+
+    /* ========================================
        INFO BOX
        ======================================== */
 
@@ -370,6 +540,15 @@
       border-radius: var(--radius-md);
       padding: var(--space-lg);
       margin: var(--space-xl) 0;
+    }
+
+    .info-box--warning {
+      background: var(--signal-orange-glow);
+      border-color: rgba(232, 93, 4, 0.3);
+    }
+
+    .info-box--warning .info-box__title {
+      color: var(--signal-orange);
     }
 
     .info-box__header {
@@ -395,13 +574,37 @@
       line-height: 1.6;
     }
 
-    .info-box--warning {
-      background: var(--signal-orange-glow);
-      border-color: rgba(232, 93, 4, 0.3);
+    /* ========================================
+       ALERT BOX
+       ======================================== */
+
+    .alert {
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      margin: var(--space-lg) 0;
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
     }
 
-    .info-box--warning .info-box__title {
-      color: var(--signal-orange);
+    .alert-warning {
+      background: rgba(255, 209, 102, 0.15);
+      border-left: 3px solid var(--warning);
+    }
+
+    .alert-info {
+      background: rgba(17, 138, 178, 0.15);
+      border-left: 3px solid var(--info);
+    }
+
+    .alert-icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .alert-content p {
+      margin: 0;
+      color: var(--chalk);
     }
 
     /* ========================================
@@ -412,11 +615,6 @@
       text-align: center;
     }
 
-    .qr-section__intro {
-      color: var(--fog);
-      margin-bottom: var(--space-lg);
-    }
-
     .qr-container {
       display: inline-block;
       background: var(--white);
@@ -425,27 +623,12 @@
       margin-bottom: var(--space-lg);
     }
 
-    .qr-placeholder {
-      width: 200px;
-      height: 200px;
-      background:
-        linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
-        linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
-        linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
-      background-size: 16px 16px;
-      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: #999;
-      border-radius: var(--radius-sm);
+    .qr-container canvas {
+      display: block;
     }
 
     /* ========================================
-       CODE BLOCK
+       CODE BLOCK / URL DISPLAY
        ======================================== */
 
     .code-block {
@@ -457,6 +640,9 @@
       justify-content: space-between;
       align-items: center;
       margin: var(--space-md) 0;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .code-block__text {
@@ -466,6 +652,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      flex: 1;
     }
 
     .code-block__copy {
@@ -483,51 +670,8 @@
       color: var(--signal-orange);
     }
 
-    /* ========================================
-       STEP PROGRESS
-       ======================================== */
-
-    .steps {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      margin-bottom: var(--space-md);
-    }
-
-    .step__dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--steel);
-    }
-
-    .step__dot--complete {
-      background: var(--static-green);
-    }
-
-    .step__dot--current {
-      background: var(--signal-orange);
-      box-shadow: 0 0 0 4px var(--signal-orange-glow);
-    }
-
-    .step__line {
-      width: 48px;
-      height: 2px;
-      background: var(--steel);
-    }
-
-    .step__line--complete {
-      background: var(--static-green);
-    }
-
-    .step__label {
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--fog);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+    .code-block__copy.copied {
+      color: var(--static-green);
     }
 
     /* ========================================
@@ -547,6 +691,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       border: 2px solid transparent;
+      text-decoration: none;
     }
 
     .btn--primary {
@@ -571,15 +716,8 @@
       background: var(--signal-orange-glow);
     }
 
-    .btn--ghost {
-      background: transparent;
-      color: var(--fog);
-      border-color: transparent;
-      padding: var(--space-sm) 0;
-    }
-
-    .btn--ghost:hover {
-      color: var(--signal-orange);
+    .btn--full {
+      width: 100%;
     }
 
     .btn-group {
@@ -590,13 +728,298 @@
     }
 
     /* ========================================
+       STEP SECTIONS
+       ======================================== */
+
+    .step-section {
+      margin-bottom: var(--space-2xl);
+      padding-bottom: var(--space-2xl);
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .step-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--signal-orange);
+      color: var(--asphalt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .step-time {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--fog);
+    }
+
+    /* ========================================
+       PLATFORM TABS
+       ======================================== */
+
+    .platform-tabs {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    .platform-tab {
+      flex: 1;
+      padding: var(--space-md);
+      background: var(--concrete);
+      border: 2px solid var(--gravel);
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .platform-tab:hover {
+      border-color: var(--fog);
+    }
+
+    .platform-tab--active {
+      border-color: var(--signal-orange);
+      background: var(--signal-orange-glow);
+    }
+
+    .platform-tab__icon {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .platform-tab__label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .platform-content {
+      display: none;
+    }
+
+    .platform-content--active {
+      display: block;
+    }
+
+    /* ========================================
+       INSTRUCTION LIST
+       ======================================== */
+
+    .instruction-list {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+    }
+
+    .instruction-item {
+      display: flex;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .instruction-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .instruction-item:first-child {
+      padding-top: 0;
+    }
+
+    .instruction-num {
+      width: 24px;
+      height: 24px;
+      background: var(--fog);
+      color: var(--asphalt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .instruction-text strong {
+      color: var(--white);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .instruction-text p {
+      color: var(--fog);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    .path-code {
+      display: inline;
+      background: var(--asphalt);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--static-green);
+    }
+
+    /* ========================================
+       CONFIG DISPLAY
+       ======================================== */
+
+    .config-display {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin: var(--space-lg) 0;
+    }
+
+    .config-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .config-item:last-child {
+      border-bottom: none;
+    }
+
+    .config-key {
+      color: var(--fog);
+    }
+
+    .config-value {
+      color: var(--static-green);
+      font-family: var(--font-mono);
+    }
+
+    /* ========================================
+       APP BADGES
+       ======================================== */
+
+    .app-badges {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .app-badge {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      color: var(--white);
+      transition: all 0.2s ease;
+    }
+
+    .app-badge:hover {
+      border-color: var(--signal-orange);
+      background: var(--gravel);
+    }
+
+    .app-badge .store-icon {
+      font-size: 1.5rem;
+    }
+
+    .app-badge .store-text {
+      font-size: 0.75rem;
+      color: var(--fog);
+    }
+
+    .app-badge .store-name {
+      font-weight: 600;
+    }
+
+    /* ========================================
+       SETTINGS TABLE
+       ======================================== */
+
+    .settings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-lg) 0;
+      font-size: 0.875rem;
+    }
+
+    .settings-table th {
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--gravel);
+      color: var(--fog);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .settings-table td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--gravel);
+      vertical-align: top;
+    }
+
+    .setting-name {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .setting-path {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--fog);
+    }
+
+    .setting-value {
+      font-family: var(--font-mono);
+      color: var(--static-green);
+    }
+
+    .setting-why {
+      color: var(--fog);
+      font-size: 0.8rem;
+    }
+
+    /* ========================================
        COLLAPSIBLE
        ======================================== */
 
     .collapsible {
       border: 1px solid var(--gravel);
       border-radius: var(--radius-md);
-      margin: var(--space-lg) 0;
+      margin: var(--space-md) 0;
       overflow: hidden;
     }
 
@@ -650,6 +1073,318 @@
     }
 
     /* ========================================
+       COMPARISON TABLE
+       ======================================== */
+
+    .comparison {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .comparison__title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: var(--space-md);
+    }
+
+    .comparison__table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .comparison__table th,
+    .comparison__table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .comparison__table th {
+      color: var(--fog);
+      font-weight: 500;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .comparison__winner {
+      color: var(--static-green);
+      font-weight: 600;
+    }
+
+    /* ========================================
+       CHANNEL DIAGRAM
+       ======================================== */
+
+    .channel-diagram {
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin: var(--space-xl) 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .channel-diagram pre {
+      margin: 0;
+      color: var(--fog);
+      line-height: 1.6;
+    }
+
+    .channel-diagram .highlight {
+      color: var(--signal-orange);
+    }
+
+    /* ========================================
+       PRODUCT LIST (Affiliate)
+       ======================================== */
+
+    .category {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .category__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .category__icon {
+      font-size: 24px;
+    }
+
+    .category__title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    .product-list {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      background: var(--concrete);
+      border: 1px solid var(--gravel);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      transition: all 0.2s ease;
+    }
+
+    .product-item:hover {
+      border-color: var(--signal-orange);
+      transform: translateX(4px);
+    }
+
+    .product-item__icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .product-item__content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .product-item__name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: var(--space-xs);
+      line-height: 1.4;
+    }
+
+    .product-item__source {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--fog);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .product-item__arrow {
+      color: var(--signal-orange);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .product-item:hover .product-item__arrow {
+      transform: translateX(4px);
+    }
+
+    /* ========================================
+       FORM ELEMENTS
+       ======================================== */
+
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: var(--space-sm);
+      font-weight: 500;
+      color: var(--chalk);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: var(--space-md);
+      background: var(--gravel);
+      border: 1px solid var(--steel);
+      border-radius: var(--radius-md);
+      color: var(--white);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--signal-orange);
+    }
+
+    .form-radio-group {
+      display: flex;
+      gap: var(--space-lg);
+    }
+
+    .form-radio {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      cursor: pointer;
+      color: var(--chalk);
+    }
+
+    .form-radio input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--signal-orange);
+    }
+
+    /* ========================================
+       TABS
+       ======================================== */
+
+    .tabs {
+      display: flex;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--gravel);
+    }
+
+    .tab {
+      padding: var(--space-md) var(--space-lg);
+      background: transparent;
+      border: none;
+      color: var(--fog);
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: var(--font-body);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      color: var(--white);
+    }
+
+    .tab.active {
+      color: var(--signal-orange);
+      border-bottom-color: var(--signal-orange);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* ========================================
+       DIVIDER
+       ======================================== */
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin: var(--space-xl) 0;
+      color: var(--fog);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gravel);
+    }
+
+    .divider .node {
+      color: var(--signal-orange);
+    }
+
+    /* ========================================
+       DONE SECTION
+       ======================================== */
+
+    .done-section {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+    }
+
+    .done-section__icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-lg);
+    }
+
+    .done-section__title {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    .done-section__text {
+      color: var(--fog);
+      margin-bottom: var(--space-xl);
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .done-buttons {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ========================================
        FOOTER
        ======================================== */
 
@@ -658,24 +1393,6 @@
       border-top: 1px solid var(--gravel);
       margin-top: var(--space-3xl);
       text-align: center;
-    }
-
-    .footer__links {
-      display: flex;
-      justify-content: center;
-      gap: var(--space-lg);
-      margin-bottom: var(--space-lg);
-      flex-wrap: wrap;
-    }
-
-    .footer__link {
-      font-size: 14px;
-      color: var(--fog);
-      transition: color 0.2s ease;
-    }
-
-    .footer__link:hover {
-      color: var(--signal-orange);
     }
 
     .footer__credit {
@@ -688,34 +1405,19 @@
     }
 
     /* ========================================
-       ANIMATIONS
-       ======================================== */
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-in {
-      animation: fadeInUp 0.5s ease forwards;
-    }
-
-    .delay-1 { animation-delay: 0.1s; opacity: 0; }
-    .delay-2 { animation-delay: 0.2s; opacity: 0; }
-    .delay-3 { animation-delay: 0.3s; opacity: 0; }
-    .delay-4 { animation-delay: 0.4s; opacity: 0; }
-
-    /* ========================================
        RESPONSIVE
        ======================================== */
 
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      .nav-links {
+        gap: 0;
+      }
+
+      .nav-link {
+        padding: var(--space-sm) var(--space-sm);
+        font-size: 12px;
+      }
+
       .hero__title {
         font-size: 32px;
       }
@@ -725,115 +1427,128 @@
         gap: var(--space-sm);
       }
 
-      .card-grid {
+      .card-grid, .product-grid {
         grid-template-columns: 1fr;
-      }
-
-      .step__line {
-        width: 24px;
       }
 
       .wordmark {
         font-size: 32px;
       }
 
-      .btn-group {
+      .page-header__title {
+        font-size: 32px;
+      }
+
+      .platform-tabs {
         flex-direction: column;
       }
 
-      .btn-group .btn {
+      .btn-group, .done-buttons {
+        flex-direction: column;
+      }
+
+      .btn-group .btn, .done-buttons .btn {
         width: 100%;
+      }
+
+      .app-badges {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .settings-table {
+        font-size: 0.75rem;
+      }
+
+      .settings-table th, .settings-table td {
+        padding: var(--space-xs) var(--space-sm);
+      }
+
+      .form-radio-group {
+        flex-direction: column;
+        gap: var(--space-md);
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- ==================== NAVIGATION ==================== -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="nav-logo" data-nav="home">N<span class="node-o">&#9673;</span>DEVILLE</div>
+      <div class="nav-links">
+        <span class="nav-link active" data-nav="home">Home</span>
+        <span class="nav-link" data-nav="get-device">Get Device</span>
+        <span class="nav-link" data-nav="setup">Setup</span>
+        <span class="nav-link" data-nav="encrypt">Encrypt</span>
+        <span class="nav-link" data-nav="advanced">Advanced</span>
+        <span class="nav-link" data-nav="generate">QR Gen</span>
+        <span class="nav-link" data-nav="affiliate">Gear</span>
+      </div>
+    </div>
+  </nav>
+
   <div class="container">
 
-    <!-- ==================== HEADER ==================== -->
-    <header class="site-header">
-      <div class="logo animate-in">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Hexagon frame -->
-          <path d="M50 8 L85 28 L85 72 L50 92 L15 72 L15 28 Z"
-                stroke="#32323E" stroke-width="2" fill="none"/>
-          <!-- Outer nodes -->
-          <circle cx="50" cy="8" r="6" fill="#E85D04"/>
-          <circle cx="85" cy="28" r="6" fill="#E85D04"/>
-          <circle cx="85" cy="72" r="6" fill="#E85D04"/>
-          <circle cx="50" cy="92" r="6" fill="#E85D04"/>
-          <circle cx="15" cy="72" r="6" fill="#E85D04"/>
-          <circle cx="15" cy="28" r="6" fill="#E85D04"/>
-          <!-- Center node -->
-          <circle cx="50" cy="50" r="8" fill="#06D6A0"/>
-          <!-- Center connections -->
-          <line x1="50" y1="50" x2="50" y2="14" stroke="#32323E" stroke-width="2"/>
-          <line x1="50" y1="50" x2="80" y2="31" stroke="#32323E" stroke-width="2"/>
-          <line x1="50" y1="50" x2="80" y2="69" stroke="#32323E" stroke-width="2"/>
-          <line x1="50" y1="50" x2="50" y2="86" stroke="#32323E" stroke-width="2"/>
-          <line x1="50" y1="50" x2="20" y2="69" stroke="#32323E" stroke-width="2"/>
-          <line x1="50" y1="50" x2="20" y2="31" stroke="#32323E" stroke-width="2"/>
-        </svg>
-      </div>
-      <h1 class="wordmark animate-in delay-1">N<span class="node-o">&#9673;</span>DEVILLE</h1>
-      <p class="tagline animate-in delay-2">Your neighborhood mesh network</p>
-    </header>
-
-    <!-- ==================== HERO ==================== -->
-    <section class="hero">
-      <h2 class="hero__title animate-in delay-2">
-        Send messages<br>
-        <span class="highlight">without cell service</span>
-      </h2>
-      <p class="hero__subtitle animate-in delay-3">
-        Nodeville is Nashville's community mesh network. Your messages hop between
-        neighbors' devices until they arrive — no towers, no internet, no monthly bills.
-      </p>
-      <div class="hero__features animate-in delay-4">
-        <div class="hero__feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
+    <!-- ==================== HOME SECTION ==================== -->
+    <section id="home" class="section active">
+      <header class="site-header">
+        <div class="logo">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 8 L85 28 L85 72 L50 92 L15 72 L15 28 Z" stroke="#32323E" stroke-width="2" fill="none"/>
+            <circle cx="50" cy="8" r="6" fill="#E85D04"/>
+            <circle cx="85" cy="28" r="6" fill="#E85D04"/>
+            <circle cx="85" cy="72" r="6" fill="#E85D04"/>
+            <circle cx="50" cy="92" r="6" fill="#E85D04"/>
+            <circle cx="15" cy="72" r="6" fill="#E85D04"/>
+            <circle cx="15" cy="28" r="6" fill="#E85D04"/>
+            <circle cx="50" cy="50" r="8" fill="#06D6A0"/>
+            <line x1="50" y1="50" x2="50" y2="14" stroke="#32323E" stroke-width="2"/>
+            <line x1="50" y1="50" x2="80" y2="31" stroke="#32323E" stroke-width="2"/>
+            <line x1="50" y1="50" x2="80" y2="69" stroke="#32323E" stroke-width="2"/>
+            <line x1="50" y1="50" x2="50" y2="86" stroke="#32323E" stroke-width="2"/>
+            <line x1="50" y1="50" x2="20" y2="69" stroke="#32323E" stroke-width="2"/>
+            <line x1="50" y1="50" x2="20" y2="31" stroke="#32323E" stroke-width="2"/>
           </svg>
-          <span>No internet required</span>
         </div>
-        <div class="hero__feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>End-to-end encrypted</span>
-        </div>
-        <div class="hero__feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>~$40 one-time cost</span>
-        </div>
-      </div>
-    </section>
+        <h1 class="wordmark">N<span class="node-o">&#9673;</span>DEVILLE</h1>
+        <p class="tagline">Your neighborhood mesh network</p>
+      </header>
 
-    <!-- ==================== DIVIDER ==================== -->
-    <div class="node-divider">
-      <div class="node-divider__dot node-divider__dot--active"></div>
-      <div class="node-divider__line"></div>
-      <div class="node-divider__dot"></div>
-      <div class="node-divider__line"></div>
-      <div class="node-divider__dot"></div>
-      <div class="node-divider__line"></div>
-      <div class="node-divider__dot"></div>
-      <div class="node-divider__line"></div>
-      <div class="node-divider__dot node-divider__dot--active"></div>
-    </div>
-
-    <!-- ==================== PATHS SECTION ==================== -->
-    <section class="section">
-      <div class="section__header">
-        <p class="section__label">Choose Your Path</p>
-        <h3 class="section__title">Where are you starting?</h3>
+      <div class="hero">
+        <h2 class="hero__title">
+          Send messages<br>
+          <span class="highlight">without cell service</span>
+        </h2>
+        <p class="hero__subtitle">
+          Nodeville is Nashville's community mesh network. Your messages hop between
+          neighbors' devices until they arrive — no towers, no internet, no monthly bills.
+        </p>
+        <div class="hero__features">
+          <div class="hero__feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>No internet required</span>
+          </div>
+          <div class="hero__feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>End-to-end encrypted</span>
+          </div>
+          <div class="hero__feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>~$40 one-time cost</span>
+          </div>
+        </div>
       </div>
 
       <div class="card-grid">
-        <a href="/get-device/" class="card">
+        <div class="card" data-nav="get-device">
           <div class="card__icon">&#128230;</div>
           <h4 class="card__title">I Need a Device</h4>
           <p class="card__description">What to buy and where to get it. No soldering required — just unbox and go.</p>
@@ -841,9 +1556,9 @@
             <span class="card__time">3 min read</span>
             <span class="card__arrow">&rarr;</span>
           </div>
-        </a>
+        </div>
 
-        <a href="/setup/" class="card">
+        <div class="card" data-nav="setup">
           <div class="card__icon">&#128640;</div>
           <h4 class="card__title">I Have a Device</h4>
           <p class="card__description">Connect to the Nashville mesh in 5 minutes. Scan one QR code and you're in.</p>
@@ -851,9 +1566,9 @@
             <span class="card__time">5 min setup</span>
             <span class="card__arrow">&rarr;</span>
           </div>
-        </a>
+        </div>
 
-        <a href="/encrypt/" class="card">
+        <div class="card" data-nav="encrypt">
           <div class="card__icon">&#128274;</div>
           <h4 class="card__title">Private Messaging</h4>
           <p class="card__description">Create encrypted conversations only you and your contacts can read.</p>
@@ -861,9 +1576,9 @@
             <span class="card__time">3 min read</span>
             <span class="card__arrow">&rarr;</span>
           </div>
-        </a>
+        </div>
 
-        <a href="/advanced/" class="card">
+        <div class="card" data-nav="advanced">
           <div class="card__icon">&#9881;</div>
           <h4 class="card__title">Advanced Settings</h4>
           <p class="card__description">Battery optimization, privacy controls, MQTT bridges, and power user configs.</p>
@@ -871,129 +1586,1102 @@
             <span class="card__time">10 min read</span>
             <span class="card__arrow">&rarr;</span>
           </div>
-        </a>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__header">
+          <span class="info-box__icon">&#128161;</span>
+          <span class="info-box__title">How does mesh networking work?</span>
+        </div>
+        <p class="info-box__content">
+          Each device is a node. When you send a message, it hops from node to node until it
+          reaches the destination — like passing a note through a crowd. More nodes = better coverage.
+          The network belongs to everyone who uses it.
+        </p>
+      </div>
+
+      <div class="qr-section">
+        <h3 style="color: var(--white); margin-bottom: var(--space-md);">Quick Start QR</h3>
+        <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+          Already have a device? Scan this to join Nashville:
+        </p>
+        <div class="qr-container">
+          <canvas id="home-qr" data-qr="network" data-size="200"></canvas>
+        </div>
+        <div class="code-block">
+          <span class="code-block__text" id="home-network-url" data-network-url>Loading...</span>
+          <button class="code-block__copy" data-copy="home-network-url">&#128203;</button>
+        </div>
       </div>
     </section>
 
-    <!-- ==================== INFO BOX ==================== -->
-    <div class="info-box">
-      <div class="info-box__header">
-        <span class="info-box__icon">&#128161;</span>
-        <span class="info-box__title">How does mesh networking work?</span>
+    <!-- ==================== GET DEVICE SECTION ==================== -->
+    <section id="get-device" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#128230;</div>
+        <h1 class="page-header__title">Get a Device</h1>
+        <p class="page-header__subtitle">
+          No soldering required. These pocket-sized devices work out of the box with the Meshtastic app.
+        </p>
+      </header>
+
+      <div class="product-grid">
+        <div class="product-card product-card--recommended">
+          <div class="product-card__image">&#128225;</div>
+          <h2 class="product-card__name">Seeed T1000-E</h2>
+          <p class="product-card__price">~$40</p>
+          <ul class="product-card__specs">
+            <li class="product-card__spec">
+              <span>&#128246;</span>
+              <span>Range</span>
+              <span class="product-card__spec-value">1.8 km</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128267;</span>
+              <span>Battery</span>
+              <span class="product-card__spec-value">~2 days</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128205;</span>
+              <span>GPS</span>
+              <span class="product-card__spec-value">Built-in</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128167;</span>
+              <span>Waterproof</span>
+              <span class="product-card__spec-value">IP65</span>
+            </li>
+          </ul>
+          <a href="https://a.co/d/hiGgtDS" class="product-card__cta" target="_blank" rel="noopener">
+            Buy on Amazon &rarr;
+          </a>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__image">&#127991;</div>
+          <h2 class="product-card__name">WisMesh Tap</h2>
+          <p class="product-card__price">~$40</p>
+          <ul class="product-card__specs">
+            <li class="product-card__spec">
+              <span>&#128246;</span>
+              <span>Range</span>
+              <span class="product-card__spec-value">500-600m</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128267;</span>
+              <span>Battery</span>
+              <span class="product-card__spec-value">~3 days</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128205;</span>
+              <span>GPS</span>
+              <span class="product-card__spec-value">Built-in</span>
+            </li>
+            <li class="product-card__spec">
+              <span>&#128167;</span>
+              <span>Waterproof</span>
+              <span class="product-card__spec-value">IP66</span>
+            </li>
+          </ul>
+          <a href="https://store.rakwireless.com/products/wismesh-tap" class="product-card__cta" target="_blank" rel="noopener">
+            Buy from RAK &rarr;
+          </a>
+        </div>
       </div>
-      <p class="info-box__content">
-        Each device is a node. When you send a message, it hops from node to node until it
-        reaches the destination — like passing a note through a crowd. More nodes = better coverage.
-        The network belongs to everyone who uses it.
+
+      <div class="comparison">
+        <h3 class="comparison__title">Quick Comparison</h3>
+        <table class="comparison__table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>T1000-E</th>
+              <th>WisMesh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Range</td>
+              <td class="comparison__winner">1.8 km &#10003;</td>
+              <td>500-600m</td>
+            </tr>
+            <tr>
+              <td>Battery Life</td>
+              <td>~2 days</td>
+              <td class="comparison__winner">~3 days &#10003;</td>
+            </tr>
+            <tr>
+              <td>Waterproofing</td>
+              <td>IP65</td>
+              <td class="comparison__winner">IP66 &#10003;</td>
+            </tr>
+            <tr>
+              <td>Buzzer/Alerts</td>
+              <td class="comparison__winner">Yes &#10003;</td>
+              <td>No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box__header">
+          <span>&#128161;</span>
+          <span class="info-box__title">Our recommendation</span>
+        </div>
+        <p class="info-box__content">
+          For Nashville, we recommend the <strong>T1000-E</strong>. The 3x better range makes a real difference
+          in a spread-out city. The built-in buzzer also helps you find the device if you lose it.
+        </p>
+      </div>
+
+      <div class="btn-group" style="justify-content: center;">
+        <button class="btn btn--primary" data-nav="setup">Got a device? Start Setup &rarr;</button>
+        <button class="btn btn--secondary" data-nav="affiliate">More gear options</button>
+      </div>
+    </section>
+
+    <!-- ==================== SETUP SECTION ==================== -->
+    <section id="setup" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#128640;</div>
+        <h1 class="page-header__title">Setup Guide</h1>
+        <p class="page-header__subtitle">
+          Join Nashville's mesh network in about 10 minutes.
+        </p>
+      </header>
+
+      <!-- Step 1: Install App -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div>
+            <h2 class="step-title">Install the App</h2>
+            <p class="step-time">~1 minute</p>
+          </div>
+        </div>
+        <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+          Download the official Meshtastic app for your phone. It's free.
+        </p>
+        <div class="app-badges">
+          <a href="https://play.google.com/store/apps/details?id=com.geeksville.mesh" class="app-badge" target="_blank" rel="noopener">
+            <span class="store-icon">&#129302;</span>
+            <div>
+              <div class="store-text">Get it on</div>
+              <div class="store-name">Google Play</div>
+            </div>
+          </a>
+          <a href="https://apps.apple.com/app/meshtastic/id1586432531" class="app-badge" target="_blank" rel="noopener">
+            <span class="store-icon">&#127822;</span>
+            <div>
+              <div class="store-text">Download on the</div>
+              <div class="store-name">App Store</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Step 2: Pair Device -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div>
+            <h2 class="step-title">Pair Your Device</h2>
+            <p class="step-time">~2 minutes</p>
+          </div>
+        </div>
+
+        <div class="platform-tabs" data-platform-group="pair">
+          <div class="platform-tab platform-tab--active" data-platform="android">
+            <div class="platform-tab__icon">&#129302;</div>
+            <div class="platform-tab__label">Android</div>
+          </div>
+          <div class="platform-tab" data-platform="ios">
+            <div class="platform-tab__icon">&#127822;</div>
+            <div class="platform-tab__label">iPhone</div>
+          </div>
+        </div>
+
+        <div class="platform-content platform-content--active" data-platform-content="pair-android">
+          <div class="instruction-list">
+            <div class="instruction-item">
+              <div class="instruction-num">1</div>
+              <div class="instruction-text">
+                <strong>Turn on your Meshtastic device</strong>
+                <p>Hold the power button until the screen lights up</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">2</div>
+              <div class="instruction-text">
+                <strong>Open the Meshtastic app</strong>
+                <p>Go to the <span class="path-code">Connection</span> tab</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">3</div>
+              <div class="instruction-text">
+                <strong>Select your device from the list</strong>
+                <p>It shows as "Meshtastic_XXXX"</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">4</div>
+              <div class="instruction-text">
+                <strong>Enter PIN: <span class="path-code">123456</span></strong>
+                <p>This is the factory default. You'll change it in Step 5.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="platform-content" data-platform-content="pair-ios">
+          <div class="instruction-list">
+            <div class="instruction-item">
+              <div class="instruction-num">1</div>
+              <div class="instruction-text">
+                <strong>Turn on your Meshtastic device</strong>
+                <p>Hold the power button until the screen lights up</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">2</div>
+              <div class="instruction-text">
+                <strong>Open the Meshtastic app</strong>
+                <p>Go to the <span class="path-code">Settings</span> tab</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">3</div>
+              <div class="instruction-text">
+                <strong>Tap "Connect to Radio"</strong>
+                <p>The app will scan for nearby Bluetooth devices</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">4</div>
+              <div class="instruction-text">
+                <strong>Select your device and enter PIN: <span class="path-code">123456</span></strong>
+                <p>This is the factory default. You'll change it in Step 5.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Join Network -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div>
+            <h2 class="step-title">Join the Nashville Network</h2>
+            <p class="step-time">~1 minute</p>
+          </div>
+        </div>
+
+        <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+          Scan this QR code to configure your device for Nashville's mesh.
+        </p>
+
+        <div class="qr-section">
+          <div class="qr-container">
+            <canvas id="setup-qr" data-qr="network" data-size="220"></canvas>
+          </div>
+          <div class="code-block">
+            <span class="code-block__text" id="setup-network-url" data-network-url>Loading...</span>
+            <button class="code-block__copy" data-copy="setup-network-url">&#128203; Copy</button>
+          </div>
+        </div>
+
+        <div class="platform-tabs" data-platform-group="scan">
+          <div class="platform-tab platform-tab--active" data-platform="android">
+            <div class="platform-tab__icon">&#129302;</div>
+            <div class="platform-tab__label">Android</div>
+          </div>
+          <div class="platform-tab" data-platform="ios">
+            <div class="platform-tab__icon">&#127822;</div>
+            <div class="platform-tab__label">iPhone</div>
+          </div>
+        </div>
+
+        <div class="platform-content platform-content--active" data-platform-content="scan-android">
+          <div class="instruction-list">
+            <div class="instruction-item">
+              <div class="instruction-num">1</div>
+              <div class="instruction-text">
+                <strong>In the app, go to Messages tab</strong>
+                <p>Speech bubble icon in the bottom navigation</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">2</div>
+              <div class="instruction-text">
+                <strong>Tap the floating button with the QR icon</strong>
+                <p>Or go to <span class="path-code">Settings &rarr; Channels &rarr; Scan QR</span></p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">3</div>
+              <div class="instruction-text">
+                <strong>Point camera at the QR code above</strong>
+                <p>Or tap "Paste URL" and paste the link</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">4</div>
+              <div class="instruction-text">
+                <strong>Choose "Replace All Channels"</strong>
+                <p>This applies the Nashville network settings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="platform-content" data-platform-content="scan-ios">
+          <div class="instruction-list">
+            <div class="instruction-item">
+              <div class="instruction-num">1</div>
+              <div class="instruction-text">
+                <strong>Open your iPhone's Camera app</strong>
+                <p>Not the Meshtastic app — use the regular Camera</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">2</div>
+              <div class="instruction-text">
+                <strong>Point it at the QR code above</strong>
+                <p>A yellow banner will appear</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">3</div>
+              <div class="instruction-text">
+                <strong>Tap the banner to open in Meshtastic</strong>
+                <p>If it opens Safari, copy the URL manually</p>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <div class="instruction-num">4</div>
+              <div class="instruction-text">
+                <strong>Tap "Replace Channels" when prompted</strong>
+                <p>This applies the Nashville network settings</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box__header">
+            <span>&#128295;</span>
+            <span class="info-box__title">What this configures</span>
+          </div>
+          <p class="info-box__content">
+            <strong>Region:</strong> US &middot; <strong>Modem:</strong> Medium Fast &middot; <strong>Hop Limit:</strong> 7<br>
+            <strong>OK to MQTT:</strong> Enabled (helps grow the network map)
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 4: Set Name -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div>
+            <h2 class="step-title">Set Your Name</h2>
+            <p class="step-time">~1 minute</p>
+          </div>
+        </div>
+        <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+          This is how you'll appear to other people on the mesh.
+        </p>
+        <div class="instruction-list">
+          <div class="instruction-item">
+            <div class="instruction-num">1</div>
+            <div class="instruction-text">
+              <strong>Go to <span class="path-code">Settings &rarr; User</span></strong>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">2</div>
+            <div class="instruction-text">
+              <strong>Set your Long Name</strong>
+              <p>Example: "Sarah @ East Nashville"</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">3</div>
+            <div class="instruction-text">
+              <strong>Set your Short Name (4 chars max)</strong>
+              <p>Example: "SARA"</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">4</div>
+            <div class="instruction-text">
+              <strong>Tap Save</strong>
+              <p>Your device will reboot</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Change PIN -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">5</div>
+          <div>
+            <h2 class="step-title">Change Your Bluetooth PIN</h2>
+            <p class="step-time">~1 minute</p>
+          </div>
+        </div>
+
+        <div class="info-box info-box--warning">
+          <div class="info-box__header">
+            <span>&#9888;&#65039;</span>
+            <span class="info-box__title">Don't skip this step</span>
+          </div>
+          <p class="info-box__content">
+            The default PIN (<strong>123456</strong>) is public knowledge. Anyone nearby could connect to your device.
+          </p>
+        </div>
+
+        <div class="instruction-list">
+          <div class="instruction-item">
+            <div class="instruction-num">1</div>
+            <div class="instruction-text">
+              <strong>Go to <span class="path-code">Settings &rarr; Radio Config &rarr; Bluetooth</span></strong>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">2</div>
+            <div class="instruction-text">
+              <strong>Make sure Pairing Mode is "Fixed PIN"</strong>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">3</div>
+            <div class="instruction-text">
+              <strong>Enter a new 6-digit PIN</strong>
+              <p>Pick something you'll remember</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-num">4</div>
+            <div class="instruction-text">
+              <strong>Tap Save</strong>
+              <p>Write down your PIN somewhere safe</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: Optimize -->
+      <div class="step-section">
+        <div class="step-header">
+          <div class="step-number">6</div>
+          <div>
+            <h2 class="step-title">Optimize for Nashville</h2>
+            <p class="step-time">~2 minutes (optional)</p>
+          </div>
+        </div>
+        <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+          These settings help the network run smoothly and save battery.
+        </p>
+        <table class="settings-table">
+          <thead>
+            <tr>
+              <th>Setting</th>
+              <th>Value</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="setting-name">Position Broadcast</div>
+                <div class="setting-path">Radio Config &rarr; Position</div>
+              </td>
+              <td class="setting-value">1 hour</td>
+              <td class="setting-why">Default 15min is too chatty</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="setting-name">Smart Position</div>
+                <div class="setting-path">Radio Config &rarr; Position</div>
+              </td>
+              <td class="setting-value">ON</td>
+              <td class="setting-why">Only broadcasts when moving</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="setting-name">Device Role</div>
+                <div class="setting-path">Radio Config &rarr; Device</div>
+              </td>
+              <td class="setting-value">CLIENT</td>
+              <td class="setting-why">Default is fine for portables</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Done -->
+      <div class="done-section">
+        <div class="done-section__icon">&#127881;</div>
+        <h2 class="done-section__title">You're on the Mesh!</h2>
+        <p class="done-section__text">
+          Go to the Messages tab and say hello. Your message will hop through Nashville until someone replies.
+        </p>
+        <div class="done-buttons">
+          <button class="btn btn--primary" data-nav="encrypt">Set up private messaging &rarr;</button>
+          <button class="btn btn--secondary" data-nav="advanced">Advanced settings</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ENCRYPT SECTION ==================== -->
+    <section id="encrypt" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#128274;</div>
+        <h1 class="page-header__title">Private Messaging</h1>
+        <p class="page-header__subtitle">Signal-style privacy on the mesh</p>
+      </header>
+
+      <p style="color: var(--fog);">
+        The public channel is like a group chat — everyone sees everything.
+        For private conversations, create additional channels with unique encryption keys.
       </p>
-    </div>
 
-    <!-- ==================== QUICK START QR ==================== -->
-    <section class="section qr-section">
-      <div class="section__header">
-        <p class="section__label">Quick Start</p>
-        <h3 class="section__title">Just want the network QR?</h3>
+      <div class="channel-diagram">
+<pre>&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474; <span class="highlight">Channel 0:</span> Public Nashville mesh       &#9474;  &#8592; Everyone
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474; <span class="highlight">Channel 1:</span> "Alex" (your key)           &#9474;  &#8592; Just you &amp; Alex
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474; <span class="highlight">Channel 2:</span> "Family" (your key)         &#9474;  &#8592; Just your family
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</pre>
       </div>
 
-      <p class="qr-section__intro">
-        If you already have a Meshtastic device and the app installed, scan this to join Nashville:
-      </p>
+      <div class="divider"><span class="node">&#9673;</span></div>
 
-      <div class="qr-container">
-        <canvas id="home-qr" data-qr="network" data-size="200"></canvas>
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">Create a Private Channel</h2>
+
+      <div class="instruction-list">
+        <div class="instruction-item">
+          <div class="instruction-num">1</div>
+          <div class="instruction-text">
+            <strong>Open Meshtastic app</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">2</div>
+          <div class="instruction-text">
+            <strong>Go to <span class="path-code">Settings &rarr; Channels</span></strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">3</div>
+          <div class="instruction-text">
+            <strong>Tap "+ Add Channel"</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">4</div>
+          <div class="instruction-text">
+            <strong>Enter a name (e.g., "Alex" or "Family")</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">5</div>
+          <div class="instruction-text">
+            <strong>Tap PSK &rarr; Select "Random"</strong>
+            <p>Generates 256-bit AES key</p>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">6</div>
+          <div class="instruction-text">
+            <strong>Tap Save</strong>
+            <p>Device will reboot</p>
+          </div>
+        </div>
       </div>
 
-      <div class="code-block">
-        <span class="code-block__text" id="home-network-url" data-network-url>Loading...</span>
-        <button class="code-block__copy" onclick="copyNetworkURL()" title="Copy URL">&#128203;</button>
+      <div class="divider"><span class="node">&#9673;</span></div>
+
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">Share With Your Contact</h2>
+
+      <div class="instruction-list">
+        <div class="instruction-item">
+          <div class="instruction-num">1</div>
+          <div class="instruction-text">
+            <strong>Go to <span class="path-code">Settings &rarr; Channels</span></strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">2</div>
+          <div class="instruction-text">
+            <strong>Tap your new channel</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">3</div>
+          <div class="instruction-text">
+            <strong>Tap "Share" or the QR icon</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">4</div>
+          <div class="instruction-text">
+            <strong>Have your contact scan the QR code</strong>
+          </div>
+        </div>
+        <div class="instruction-item">
+          <div class="instruction-num">5</div>
+          <div class="instruction-text">
+            <strong>They choose "Add Channel" (not replace!)</strong>
+          </div>
+        </div>
       </div>
 
       <div class="info-box info-box--warning">
         <div class="info-box__header">
-          <span class="info-box__icon">&#9888;</span>
-          <span class="info-box__title">Change your Bluetooth PIN</span>
+          <span>&#9888;&#65039;</span>
+          <span class="info-box__title">Security notes</span>
         </div>
         <p class="info-box__content">
-          The default PIN (123456) lets anyone nearby connect to your device. After joining,
-          go to Settings &rarr; Bluetooth and set a unique PIN.
+          Anyone with the QR code can read that channel's messages.
+          Share QR codes in person or via secure channel (Signal, etc.).
+          Don't post private channel QRs publicly.
         </p>
       </div>
+
+      <div class="collapsible">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#129300;</span>
+          <span class="collapsible__title">How does the encryption work?</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          When you create a channel with a "Random" PSK, the app generates a 256-bit AES encryption key.
+          This is the same encryption standard used by banks and governments.
+          Messages are encrypted on your phone before transmission.
+          Only devices with the exact same key can decrypt them.
+        </div>
+      </div>
+
+      <div class="collapsible">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#128161;</span>
+          <span class="collapsible__title">Channel limits</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          Meshtastic devices can have up to <strong>8 channels</strong> (0-7).
+          Channel 0 is always the primary/public channel.
+          That means you can have up to 7 private conversations active at once.
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content: center; margin-top: var(--space-2xl);">
+        <button class="btn btn--secondary" data-nav="generate">Use QR Generator Tool &rarr;</button>
+      </div>
     </section>
 
-    <!-- ==================== STEP INDICATOR DEMO ==================== -->
-    <section class="section">
-      <div class="section__header">
-        <p class="section__label">Setup Progress</p>
-        <h3 class="section__title">Step indicator preview</h3>
+    <!-- ==================== ADVANCED SECTION ==================== -->
+    <section id="advanced" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#9881;</div>
+        <h1 class="page-header__title">Advanced Settings</h1>
+        <p class="page-header__subtitle">Battery, privacy, and network configuration</p>
+      </header>
+
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">&#128267; Battery Optimization</h2>
+      <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+        Default settings drain battery fast. For longer life, adjust these:
+      </p>
+
+      <div class="config-display">
+        <div class="config-item">
+          <span class="config-key">Position Broadcast</span>
+          <span class="config-value">6 hours (not 15 min)</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Telemetry Interval</span>
+          <span class="config-value">6 hours</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Smart Position</span>
+          <span class="config-value">ON</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Device Role</span>
+          <span class="config-value">CLIENT (not ROUTER)</span>
+        </div>
       </div>
 
-      <div class="steps">
-        <div class="step__dot step__dot--complete"></div>
-        <div class="step__line step__line--complete"></div>
-        <div class="step__dot step__dot--complete"></div>
-        <div class="step__line step__line--complete"></div>
-        <div class="step__dot step__dot--current"></div>
-        <div class="step__line"></div>
-        <div class="step__dot"></div>
-        <div class="step__line"></div>
-        <div class="step__dot"></div>
+      <div class="divider"><span class="node">&#9673;</span></div>
+
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">&#128274; Privacy Settings</h2>
+      <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+        Control how much location information you share:
+      </p>
+
+      <div class="config-display">
+        <div class="config-item">
+          <span class="config-key">0</span>
+          <span class="config-value">Never share location</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">10-12</span>
+          <span class="config-value">~10km accuracy</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">14</span>
+          <span class="config-value">~1.5km accuracy (city)</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">32</span>
+          <span class="config-value">Full precision</span>
+        </div>
       </div>
-      <p class="step__label">Step 3 of 5 — Join the Network</p>
+
+      <div class="divider"><span class="node">&#9673;</span></div>
+
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">&#127760; MQTT (Internet Bridge)</h2>
+
+      <div class="info-box">
+        <div class="info-box__header">
+          <span>&#128161;</span>
+          <span class="info-box__title">Good news</span>
+        </div>
+        <p class="info-box__content">
+          You're already helping! The Nodeville QR code enables "OK to MQTT" by default.
+          This lets gateway nodes forward your position to
+          <a href="https://meshmap.net" target="_blank" style="color: var(--static-green);">meshmap.net</a>.
+        </p>
+      </div>
+
+      <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+        If you want to contribute your own gateway (requires WiFi):
+      </p>
+
+      <div class="config-display">
+        <div class="config-item">
+          <span class="config-key">Server</span>
+          <span class="config-value">mqtt.nashme.sh</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Username</span>
+          <span class="config-value">meshdev</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Password</span>
+          <span class="config-value">large4cats</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">Root Topic</span>
+          <span class="config-value">msh/US/TN/Middle</span>
+        </div>
+      </div>
+
+      <div class="divider"><span class="node">&#9673;</span></div>
+
+      <h2 style="color: var(--white); margin-bottom: var(--space-lg);">&#128225; Radio Presets</h2>
+
+      <div class="config-display">
+        <div class="config-item">
+          <span class="config-key">SHORT_FAST</span>
+          <span class="config-value">Fastest, shortest range</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">MEDIUM_FAST</span>
+          <span class="config-value">Good balance (Nodeville default)</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">LONG_FAST</span>
+          <span class="config-value">Long range</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">LONG_SLOW</span>
+          <span class="config-value">Maximum range, slowest</span>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <span class="alert-icon">&#9888;&#65039;</span>
+        <div class="alert-content">
+          <p>
+            <strong>Don't change the preset</strong> unless you know what you're doing.
+            All devices on the mesh need the same preset. Nodeville uses MEDIUM_FAST.
+          </p>
+        </div>
+      </div>
     </section>
 
-    <!-- ==================== COLLAPSIBLE ==================== -->
-    <div class="collapsible collapsible--open" onclick="this.classList.toggle('collapsible--open')">
-      <div class="collapsible__header">
-        <span class="collapsible__icon">&#128295;</span>
-        <span class="collapsible__title">What does the QR code configure?</span>
-        <span class="collapsible__arrow">&#9660;</span>
-      </div>
-      <div class="collapsible__content">
-        <strong>Region:</strong> US (legal frequencies for North America)<br>
-        <strong>Modem Preset:</strong> Medium Fast (balanced range & speed)<br>
-        <strong>Hop Limit:</strong> 7 (messages relay up to 7 times)<br>
-        <strong>Primary Channel:</strong> Nashville public mesh<br>
-        <strong>OK to MQTT:</strong> Enabled (lets gateway nodes share your position to meshmap.net)
-      </div>
-    </div>
+    <!-- ==================== QR GENERATOR SECTION ==================== -->
+    <section id="generate" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#9881;</div>
+        <h1 class="page-header__title">QR Generator</h1>
+        <p class="page-header__subtitle">Create channel configurations without a device</p>
+      </header>
 
-    <div class="collapsible" onclick="this.classList.toggle('collapsible--open')">
-      <div class="collapsible__header">
-        <span class="collapsible__icon">&#10067;</span>
-        <span class="collapsible__title">Troubleshooting</span>
-        <span class="collapsible__arrow">&#9660;</span>
-      </div>
-      <div class="collapsible__content">
-        <strong>QR code not scanning?</strong><br>
-        Make sure Bluetooth is connected first. Try copying the URL and opening it in a browser.<br><br>
-        <strong>"Open with Meshtastic" not appearing?</strong><br>
-        Go to Android Settings &rarr; Apps &rarr; Meshtastic &rarr; Open by default &rarr; Enable meshtastic.org links.
-      </div>
-    </div>
+      <div data-tabs>
+        <div class="tabs">
+          <button class="tab active" data-tab="network-tab">Network QR</button>
+          <button class="tab" data-tab="private-tab">Private Channel</button>
+        </div>
 
-    <!-- ==================== BUTTONS DEMO ==================== -->
-    <section class="section">
-      <div class="section__header">
-        <p class="section__label">Actions</p>
-        <h3 class="section__title">Button styles</h3>
+        <div id="network-tab" class="tab-content active">
+          <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+            This generates the standard Nodeville network configuration.
+            Share this with new users to get them on the mesh.
+          </p>
+
+          <div class="qr-section">
+            <div class="qr-container">
+              <canvas id="gen-network-qr" data-qr="network" data-size="256"></canvas>
+            </div>
+            <div class="code-block">
+              <span class="code-block__text" id="gen-network-url" data-network-url>Loading...</span>
+              <button class="code-block__copy" data-copy="gen-network-url">&#128203; Copy</button>
+            </div>
+          </div>
+
+          <h3 style="color: var(--white); margin-bottom: var(--space-md);">Settings included:</h3>
+          <div class="config-display">
+            <div class="config-item">
+              <span class="config-key">Region</span>
+              <span class="config-value">US</span>
+            </div>
+            <div class="config-item">
+              <span class="config-key">Preset</span>
+              <span class="config-value">MEDIUM_FAST</span>
+            </div>
+            <div class="config-item">
+              <span class="config-key">Hop Limit</span>
+              <span class="config-value">7</span>
+            </div>
+            <div class="config-item">
+              <span class="config-key">OK to MQTT</span>
+              <span class="config-value">Enabled</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="private-tab" class="tab-content">
+          <p style="color: var(--fog); margin-bottom: var(--space-lg);">
+            Create an encrypted channel to share with specific people.
+          </p>
+
+          <form id="private-channel-form">
+            <div class="form-group">
+              <label class="form-label" for="channel-name">Channel Name</label>
+              <input type="text" id="channel-name" class="form-input"
+                     placeholder="e.g., Family, Work, Alex" maxlength="12">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Encryption</label>
+              <div class="form-radio-group">
+                <label class="form-radio">
+                  <input type="radio" name="encryption" value="random" checked>
+                  AES-256 (Random)
+                </label>
+                <label class="form-radio">
+                  <input type="radio" name="encryption" value="custom">
+                  Custom Key
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--full">
+              Generate Private Channel QR
+            </button>
+          </form>
+
+          <div id="private-result" style="display: none; margin-top: 2rem;">
+            <div class="alert alert-warning">
+              <span class="alert-icon">&#9888;&#65039;</span>
+              <div class="alert-content">
+                <p><strong>Save this QR — you can't regenerate the same key!</strong></p>
+              </div>
+            </div>
+
+            <div class="qr-section">
+              <div class="qr-container">
+                <canvas id="private-qr"></canvas>
+              </div>
+              <div class="code-block">
+                <span class="code-block__text" id="private-url">...</span>
+                <button class="code-block__copy" data-copy="private-url">&#128203; Copy</button>
+              </div>
+            </div>
+
+            <p style="text-align: center; color: var(--fog);">
+              Share this QR only with people you want in this conversation.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="btn-group">
-        <a href="/setup/" class="btn btn--primary">Get Started &rarr;</a>
-        <a href="/about/" class="btn btn--secondary">Learn More</a>
-        <a href="/qr/" class="btn btn--ghost">Skip to QR code &rarr;</a>
+      <div class="divider"><span class="node">&#9673;</span></div>
+
+      <div class="collapsible">
+        <div class="collapsible__header">
+          <span class="collapsible__icon">&#128274;</span>
+          <span class="collapsible__title">Security note</span>
+          <span class="collapsible__arrow">&#9660;</span>
+        </div>
+        <div class="collapsible__content">
+          When you generate a private channel QR code, a cryptographically random
+          256-bit key is created. This key is encoded in the QR code itself.
+          <br><br>
+          <strong>There's no backup.</strong> If you lose the QR code and don't have
+          any devices with the channel saved, the key is gone forever.
+        </div>
       </div>
+    </section>
+
+    <!-- ==================== AFFILIATE SECTION ==================== -->
+    <section id="affiliate" class="section">
+      <header class="page-header">
+        <div class="page-header__icon">&#128279;</div>
+        <h1 class="page-header__title">Affiliate Links</h1>
+        <p class="page-header__subtitle">
+          Gear we recommend for building your mesh node. These links help support the Nashville mesh network.
+        </p>
+      </header>
+
+      <div class="info-box">
+        <div class="info-box__header">
+          <span>&#128161;</span>
+          <span class="info-box__title">Affiliate Disclosure</span>
+        </div>
+        <p class="info-box__content">
+          Some links are affiliate links. When you purchase through these links,
+          we may earn a small commission at no extra cost to you.
+        </p>
+      </div>
+
+      <!-- Starter Devices -->
+      <section class="category">
+        <div class="category__header">
+          <span class="category__icon">&#128225;</span>
+          <h2 class="category__title">Starter Devices</h2>
+        </div>
+        <div class="product-list">
+          <a href="https://a.co/d/hiGgtDS" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128205;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">SenseCAP Card Tracker T1000-E</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+          <a href="https://amzn.to/4pYMADj" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128267;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">Heltec MeshPocket Power Bank (10000mAh)</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Antennas -->
+      <section class="category">
+        <div class="category__header">
+          <span class="category__icon">&#128225;</span>
+          <h2 class="category__title">Antennas</h2>
+        </div>
+        <div class="product-list">
+          <a href="https://amzn.to/4q8t0Vk" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128246;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">ALFA 5dbi Omni 915MHz Antenna</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+          <a href="https://amzn.to/49Zpbf8" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128246;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">915MHz LoRa External Antenna</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Power -->
+      <section class="category">
+        <div class="category__header">
+          <span class="category__icon">&#128267;</span>
+          <h2 class="category__title">Power & Batteries</h2>
+        </div>
+        <div class="product-list">
+          <a href="https://amzn.to/4a3XNN8" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128267;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">12V 20Ah Lithium Ion Battery</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+          <a href="https://amzn.to/4bqpy4L" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#9889;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">PoE Splitter USB-C</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Enclosures -->
+      <section class="category">
+        <div class="category__header">
+          <span class="category__icon">&#128230;</span>
+          <h2 class="category__title">Enclosures</h2>
+        </div>
+        <div class="product-list">
+          <a href="https://amzn.to/3NJZ58u" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#128230;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">Waterproof Electrical Junction Box</div>
+              <div class="product-item__source">Amazon</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Community -->
+      <section class="category">
+        <div class="category__header">
+          <span class="category__icon">&#127970;</span>
+          <h2 class="category__title">Community Stores</h2>
+        </div>
+        <div class="product-list">
+          <a href="https://peakmesh.etsy.com/" class="product-item" target="_blank" rel="noopener">
+            <span class="product-item__icon">&#127970;</span>
+            <div class="product-item__content">
+              <div class="product-item__name">PeakMesh - Custom Meshtastic Builds</div>
+              <div class="product-item__source">Etsy</div>
+            </div>
+            <span class="product-item__arrow">&rarr;</span>
+          </a>
+        </div>
+      </section>
     </section>
 
     <!-- ==================== FOOTER ==================== -->
     <footer class="site-footer">
-      <nav class="footer__links">
-        <a href="/setup/" class="footer__link">Setup Guide</a>
-        <a href="/encrypt/" class="footer__link">Encryption</a>
-        <a href="/advanced/" class="footer__link">Advanced</a>
-        <a href="/qr/" class="footer__link">Network QR</a>
-        <a href="/affiliate/" class="footer__link">Affiliate Links</a>
-      </nav>
       <p class="footer__credit">
         Part of the <a href="https://hyphae.social">Hyphae Network</a> &middot; Built for Nashville
       </p>
@@ -1004,21 +2692,175 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
   <script src="/js/qr-generator.js"></script>
   <script>
-    async function copyNetworkURL() {
-      const url = document.getElementById('home-network-url').textContent;
-      const btn = document.querySelector('.code-block__copy');
-      try {
-        await navigator.clipboard.writeText(url);
-        btn.innerHTML = '&#10003;';
-        btn.style.color = 'var(--static-green)';
-        setTimeout(() => {
-          btn.innerHTML = '&#128203;';
-          btn.style.color = '';
-        }, 2000);
-      } catch (e) {
-        console.error('Copy failed', e);
+    (function() {
+      'use strict';
+
+      // ==================== NAVIGATION ====================
+      const navLinks = document.querySelectorAll('[data-nav]');
+      const sections = document.querySelectorAll('.section');
+
+      function navigateTo(sectionId) {
+        // Update sections
+        sections.forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.classList.add('active');
+        }
+
+        // Update nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.classList.toggle('active', link.dataset.nav === sectionId);
+        });
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Update URL hash
+        history.replaceState(null, '', '#' + sectionId);
       }
-    }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          navigateTo(link.dataset.nav);
+        });
+      });
+
+      // Handle initial hash
+      if (window.location.hash) {
+        const hash = window.location.hash.slice(1);
+        if (document.getElementById(hash)) {
+          navigateTo(hash);
+        }
+      }
+
+      // ==================== PLATFORM TABS ====================
+      document.querySelectorAll('.platform-tabs').forEach(tabGroup => {
+        const groupName = tabGroup.dataset.platformGroup;
+        const tabs = tabGroup.querySelectorAll('.platform-tab');
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            const platform = tab.dataset.platform;
+
+            // Update tab states
+            tabs.forEach(t => t.classList.remove('platform-tab--active'));
+            tab.classList.add('platform-tab--active');
+
+            // Update content
+            const section = tabGroup.closest('.step-section') || tabGroup.closest('.section');
+            section.querySelectorAll('.platform-content').forEach(content => {
+              content.classList.remove('platform-content--active');
+            });
+
+            const targetContent = section.querySelector(`[data-platform-content="${groupName}-${platform}"]`);
+            if (targetContent) {
+              targetContent.classList.add('platform-content--active');
+            }
+          });
+        });
+      });
+
+      // ==================== TABS ====================
+      document.querySelectorAll('.tabs').forEach(tabContainer => {
+        const tabs = tabContainer.querySelectorAll('.tab');
+
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            const targetId = tab.dataset.tab;
+
+            // Update tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Update content
+            const parent = tabContainer.closest('[data-tabs]');
+            parent.querySelectorAll('.tab-content').forEach(content => {
+              content.classList.remove('active');
+            });
+
+            const target = document.getElementById(targetId);
+            if (target) {
+              target.classList.add('active');
+            }
+          });
+        });
+      });
+
+      // ==================== COLLAPSIBLES ====================
+      document.querySelectorAll('.collapsible__header').forEach(header => {
+        header.addEventListener('click', () => {
+          header.closest('.collapsible').classList.toggle('collapsible--open');
+        });
+      });
+
+      // ==================== COPY BUTTONS ====================
+      document.querySelectorAll('.code-block__copy').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const targetId = btn.dataset.copy;
+          const target = document.getElementById(targetId);
+          if (!target) return;
+
+          const text = target.textContent.trim();
+
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.classList.add('copied');
+            btn.innerHTML = '&#10003;';
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              btn.innerHTML = '&#128203;';
+            }, 2000);
+          } catch (err) {
+            // Fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            btn.classList.add('copied');
+            btn.innerHTML = '&#10003;';
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              btn.innerHTML = '&#128203;';
+            }, 2000);
+          }
+        });
+      });
+
+      // ==================== PRIVATE CHANNEL FORM ====================
+      const privateForm = document.getElementById('private-channel-form');
+      if (privateForm) {
+        privateForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+
+          const nameInput = document.getElementById('channel-name');
+          const qrCanvas = document.getElementById('private-qr');
+          const urlDisplay = document.getElementById('private-url');
+          const resultSection = document.getElementById('private-result');
+
+          if (!nameInput || !qrCanvas || !window.HyphaeMesh) return;
+
+          const channelName = nameInput.value.trim() || 'Private';
+          const result = window.HyphaeMesh.generatePrivateChannelURL(channelName);
+
+          await window.HyphaeMesh.generateQRCode(result.url, qrCanvas, 256);
+
+          if (urlDisplay) {
+            urlDisplay.textContent = result.url;
+          }
+
+          if (resultSection) {
+            resultSection.style.display = 'block';
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      }
+    })();
   </script>
 
 </body>
