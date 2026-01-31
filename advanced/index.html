@@ -137,17 +137,29 @@
     <!-- MQTT Settings -->
     <h2>🌐 MQTT (Internet Bridge)</h2>
 
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <div class="alert-content">
+        <p>
+          <strong>Good news:</strong> You're already helping! The Nodeville QR code enables
+          "OK to MQTT" by default. This lets gateway nodes forward your position to
+          <a href="https://meshmap.net" target="_blank" style="color: inherit; text-decoration: underline;">meshmap.net</a>
+          without you needing to set up MQTT yourself.
+        </p>
+      </div>
+    </div>
+
     <p>
-      MQTT bridges the mesh to the internet. When you're near WiFi, your device
-      can send messages through the internet to reach distant nodes.
+      MQTT bridges the mesh to the internet. If you want to contribute your own
+      gateway (requires WiFi on your device), here are the settings:
     </p>
 
-    <p>Tennessee mesh uses a community MQTT server:</p>
+    <p>Tennessee mesh uses the Nashville community MQTT server:</p>
 
     <div class="config-display">
       <div class="config-item">
         <span class="config-key">Server</span>
-        <span class="config-value">mqtt.tnmesh.org</span>
+        <span class="config-value">mqtt.nashme.sh</span>
       </div>
       <div class="config-item">
         <span class="config-key">Username</span>
@@ -157,41 +169,54 @@
         <span class="config-key">Password</span>
         <span class="config-value">large4cats</span>
       </div>
+      <div class="config-item">
+        <span class="config-key">Root Topic</span>
+        <span class="config-value">msh/US/TN/Middle</span>
+      </div>
     </div>
 
     <div class="instructions">
       <ol>
         <li>Go to <code>Settings → Module Config → MQTT</code></li>
         <li>Enable <strong>MQTT</strong></li>
-        <li>Set <strong>Server Address</strong> to <code>mqtt.tnmesh.org</code></li>
+        <li>Set <strong>Server Address</strong> to <code>mqtt.nashme.sh</code></li>
         <li>Set <strong>Username</strong> to <code>meshdev</code></li>
         <li>Set <strong>Password</strong> to <code>large4cats</code></li>
+        <li>Set <strong>Root Topic</strong> to <code>msh/US/TN/Middle</code></li>
         <li>Enable <strong>Encryption Required</strong></li>
+        <li>If using phone internet, enable <strong>MQTT Client Proxy</strong></li>
+      </ol>
+    </div>
+
+    <h3>Channel Settings for MQTT</h3>
+    <p>For each channel you want to bridge:</p>
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Channels</code></li>
+        <li>Select the channel (e.g., Primary)</li>
+        <li>Enable <strong>Uplink Enabled</strong> to send your data to MQTT</li>
+        <li><strong>Leave Downlink Disabled</strong> to reduce mesh traffic</li>
       </ol>
     </div>
 
     <div class="info-box">
       <div class="info-box-header">
-        <span class="info-box-title">🤔 Should I use MQTT?</span>
+        <span class="info-box-title">🤔 Should I set up MQTT?</span>
         <span class="info-box-toggle">▼</span>
       </div>
       <div class="info-box-content">
-        <p><strong>Pros:</strong></p>
+        <p><strong>Set up MQTT if:</strong></p>
         <ul>
-          <li>Extends your reach beyond radio range</li>
-          <li>Messages bridge to distant mesh nodes</li>
-          <li>Useful when traveling or in areas with poor mesh coverage</li>
+          <li>You have a stationary node with reliable WiFi</li>
+          <li>You want to help expand mesh coverage on the map</li>
+          <li>You need to reach distant nodes via internet</li>
         </ul>
-        <p><strong>Cons:</strong></p>
+        <p><strong>Skip MQTT if:</strong></p>
         <ul>
-          <li>Messages pass through an internet server</li>
-          <li>Requires WiFi on your device (not all devices have it)</li>
-          <li>Adds latency and complexity</li>
+          <li>You're using a portable device without WiFi</li>
+          <li>You just want to chat locally</li>
+          <li>You're not sure (OK to MQTT is already helping!)</li>
         </ul>
-        <p>
-          <strong>For most users:</strong> Leave MQTT disabled unless you have
-          a specific need. The mesh works great without it.
-        </p>
       </div>
     </div>
 
