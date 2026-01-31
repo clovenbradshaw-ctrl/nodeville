@@ -88,6 +88,22 @@ a:hover {
   justify-content: center;
   padding: 2rem;
   animation: fadeIn 0.3s ease-out;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile scroll fix */
+@media (max-width: 768px) {
+  .screen {
+    align-items: flex-start;
+    padding: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .screen > div {
+    margin: auto 0;
+  }
 }
 
 @keyframes fadeIn {
@@ -676,6 +692,8 @@ a:hover {
 /* Messenger Screen */
 .messenger {
   padding: 0;
+  align-items: stretch;
+  overflow: hidden;
 }
 
 .messenger-layout {

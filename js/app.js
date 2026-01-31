@@ -211,7 +211,9 @@ class MeshtasticManager {
 
     // Check if Web Bluetooth is available
     if (!navigator.bluetooth) {
-      throw new Error('Web Bluetooth not supported. Please use Chrome, Edge, or Opera on desktop, or Chrome on Android.');
+      const error = new Error('Web Bluetooth not supported. Please use Chrome, Edge, or Opera on desktop, or Chrome on Android.');
+      error.type = 'browser_unsupported';
+      throw error;
     }
 
     onProgress?.(10, 'Requesting Bluetooth device...');
@@ -267,8 +269,45 @@ class MeshtasticManager {
       return true;
     } catch (error) {
       console.error('Connection error:', error);
+      // Classify the error type for better user guidance
+      error.type = this.classifyError(error);
       throw error;
     }
+  }
+
+  classifyError(error) {
+    const message = error.message?.toLowerCase() || '';
+
+    // Web Bluetooth API disabled or blocked
+    if (message.includes('globally disabled') ||
+        message.includes('bluetooth api') ||
+        message.includes('permission denied') ||
+        message.includes('not allowed')) {
+      return 'bluetooth_disabled';
+    }
+
+    // User cancelled the device picker
+    if (message.includes('user cancelled') ||
+        message.includes('user canceled') ||
+        message.includes('user denied')) {
+      return 'user_cancelled';
+    }
+
+    // No devices found
+    if (message.includes('no device') ||
+        message.includes('device not found')) {
+      return 'no_device';
+    }
+
+    // Connection lost or failed
+    if (message.includes('disconnected') ||
+        message.includes('connection failed') ||
+        message.includes('gatt')) {
+      return 'connection_lost';
+    }
+
+    // Default to device-related error
+    return 'device';
   }
 
   async requestConfig() {
@@ -607,14 +646,87 @@ class UIManager {
     setTimeout(onComplete, 2500);
   }
 
-  showError(message, onRetry) {
+  showError(message, errorType, onRetry) {
     this.showScreen('error-template');
 
     const errorMessage = document.getElementById('error-message');
     const retryBtn = document.getElementById('retry-btn');
+    const troubleshootingContainer = document.querySelector('.troubleshooting');
 
     if (errorMessage) errorMessage.textContent = message;
     retryBtn?.addEventListener('click', onRetry);
+
+    // Show appropriate troubleshooting steps based on error type
+    if (troubleshootingContainer) {
+      const steps = this.getTroubleshootingSteps(errorType);
+      troubleshootingContainer.innerHTML = `
+        <h3>${steps.title}</h3>
+        <ul>
+          ${steps.items.map(item => `<li>${item}</li>`).join('')}
+        </ul>
+      `;
+    }
+  }
+
+  getTroubleshootingSteps(errorType) {
+    const troubleshootingGuides = {
+      bluetooth_disabled: {
+        title: 'Enable Web Bluetooth:',
+        items: [
+          'Use Chrome, Edge, or Opera browser (Firefox/Safari not supported)',
+          'On Chrome: Go to chrome://flags and enable "Experimental Web Platform features"',
+          'Make sure this page is served over HTTPS',
+          'Check that Bluetooth is enabled in your device settings',
+          'On iOS: Web Bluetooth is not supported - use the Meshtastic app instead'
+        ]
+      },
+      browser_unsupported: {
+        title: 'Browser not supported:',
+        items: [
+          'Use Google Chrome, Microsoft Edge, or Opera browser',
+          'Firefox and Safari do not support Web Bluetooth',
+          'On Android: Use Chrome browser',
+          'On iOS: Web Bluetooth is not available - use the Meshtastic app instead'
+        ]
+      },
+      user_cancelled: {
+        title: 'Connection cancelled:',
+        items: [
+          'Click "Try Again" to restart the connection',
+          'When the device picker appears, select your Meshtastic device',
+          'Make sure your device is powered on and nearby'
+        ]
+      },
+      no_device: {
+        title: 'No device found:',
+        items: [
+          'Make sure your Meshtastic device is powered on',
+          'Ensure Bluetooth is enabled on your device',
+          'Move closer to your Meshtastic device',
+          'Try restarting your Meshtastic device'
+        ]
+      },
+      connection_lost: {
+        title: 'Connection lost:',
+        items: [
+          'Move closer to your Meshtastic device',
+          'Check that your device is still powered on',
+          'Try restarting your Meshtastic device',
+          'Restart Bluetooth on your phone/computer'
+        ]
+      },
+      device: {
+        title: 'Try these steps:',
+        items: [
+          'Make sure your device is powered on',
+          'Check that Bluetooth is enabled',
+          'Move your device closer',
+          'Restart your Meshtastic device'
+        ]
+      }
+    };
+
+    return troubleshootingGuides[errorType] || troubleshootingGuides.device;
   }
 
   showMessenger(conversations, onNewConvo, onSelectConvo) {
@@ -937,7 +1049,7 @@ class NashMeshApp {
 
     } catch (error) {
       console.error('Connection error:', error);
-      this.ui.showError(error.message, () => this.startConnection());
+      this.ui.showError(error.message, error.type || 'device', () => this.startConnection());
     }
   }
 
