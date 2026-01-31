@@ -299,10 +299,14 @@ class MeshtasticManager {
       return 'no_device';
     }
 
+    // GATT errors (device busy, service not found, etc.)
+    if (message.includes('gatt')) {
+      return 'gatt_error';
+    }
+
     // Connection lost or failed
     if (message.includes('disconnected') ||
-        message.includes('connection failed') ||
-        message.includes('gatt')) {
+        message.includes('connection failed')) {
       return 'connection_lost';
     }
 
@@ -704,6 +708,16 @@ class UIManager {
           'Ensure Bluetooth is enabled on your device',
           'Move closer to your Meshtastic device',
           'Try restarting your Meshtastic device'
+        ]
+      },
+      gatt_error: {
+        title: 'Bluetooth connection blocked:',
+        items: [
+          'Close the Meshtastic app if it\'s open (it may be holding the connection)',
+          'Close other apps that might be using the device',
+          'Turn Bluetooth off and back on',
+          'Restart your Meshtastic device',
+          'Try "Forget" the device in Bluetooth settings and re-pair'
         ]
       },
       connection_lost: {
