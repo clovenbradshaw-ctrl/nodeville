@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Settings - NODEVILLE</title>
+  <meta name="description" content="Advanced Meshtastic configuration for power users.">
+  <meta name="theme-color" content="#E85D04">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <main class="container">
+    <a href="/" class="back-link">← Back to home</a>
+
+    <div class="page-header">
+      <span class="icon">⚙️</span>
+      <h1>Advanced Settings</h1>
+      <p class="subtitle">Battery, privacy, and network configuration</p>
+    </div>
+
+    <!-- Battery Optimization -->
+    <h2>🔋 Battery Optimization</h2>
+
+    <p>
+      Default settings drain battery fast. For longer life, adjust these settings:
+    </p>
+
+    <div class="config-display">
+      <div class="config-item">
+        <span class="config-key">Position Broadcast</span>
+        <span class="config-value">6 hours (not 15 min)</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">Telemetry Interval</span>
+        <span class="config-value">6 hours</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">Smart Position</span>
+        <span class="config-value">ON</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">Device Role</span>
+        <span class="config-value">CLIENT (not ROUTER)</span>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Radio Config → Position</code></li>
+        <li>Set <strong>Position Broadcast Interval</strong> to <code>21600</code> (6 hours in seconds)</li>
+        <li>Enable <strong>Smart Position</strong> (only broadcasts when moving)</li>
+        <li>Go to <code>Settings → Radio Config → Device</code></li>
+        <li>Set <strong>Role</strong> to <code>CLIENT</code></li>
+      </ol>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-header">
+        <span class="info-box-title">🤔 Why CLIENT and not ROUTER?</span>
+        <span class="info-box-toggle">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p>
+          <strong>CLIENT:</strong> Your device receives and sends your messages.
+          It doesn't actively help relay other people's messages unless needed.
+          Best for portable devices.
+        </p>
+        <p>
+          <strong>ROUTER:</strong> Your device actively relays all messages,
+          even if they're not for you. Great for a stationary device plugged
+          into power, but drains battery fast on portable devices.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <!-- Privacy Settings -->
+    <h2>🔒 Privacy Settings</h2>
+
+    <p>
+      Control how much location information you share on the mesh.
+    </p>
+
+    <h3>Position Precision</h3>
+    <p>Controls how accurate your location broadcasts are:</p>
+
+    <div class="config-display">
+      <div class="config-item">
+        <span class="config-key">0</span>
+        <span class="config-value">Never share location</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">10-12</span>
+        <span class="config-value">~10km accuracy (region level)</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">14</span>
+        <span class="config-value">~1.5km accuracy (city level)</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">32</span>
+        <span class="config-value">Full precision</span>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Radio Config → Position</code></li>
+        <li>Set <strong>Position Precision</strong> to your preference</li>
+      </ol>
+    </div>
+
+    <h3>Disable GPS Entirely</h3>
+
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Radio Config → Position</code></li>
+        <li>Set <strong>GPS Mode</strong> to <code>Disabled</code></li>
+      </ol>
+    </div>
+
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <div class="alert-content">
+        <p>
+          Disabling GPS saves battery and increases privacy, but you won't
+          appear on mesh maps and others can't see your approximate location.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <!-- MQTT Settings -->
+    <h2>🌐 MQTT (Internet Bridge)</h2>
+
+    <p>
+      MQTT bridges the mesh to the internet. When you're near WiFi, your device
+      can send messages through the internet to reach distant nodes.
+    </p>
+
+    <p>Tennessee mesh uses a community MQTT server:</p>
+
+    <div class="config-display">
+      <div class="config-item">
+        <span class="config-key">Server</span>
+        <span class="config-value">mqtt.tnmesh.org</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">Username</span>
+        <span class="config-value">meshdev</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">Password</span>
+        <span class="config-value">large4cats</span>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <ol>
+        <li>Go to <code>Settings → Module Config → MQTT</code></li>
+        <li>Enable <strong>MQTT</strong></li>
+        <li>Set <strong>Server Address</strong> to <code>mqtt.tnmesh.org</code></li>
+        <li>Set <strong>Username</strong> to <code>meshdev</code></li>
+        <li>Set <strong>Password</strong> to <code>large4cats</code></li>
+        <li>Enable <strong>Encryption Required</strong></li>
+      </ol>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-header">
+        <span class="info-box-title">🤔 Should I use MQTT?</span>
+        <span class="info-box-toggle">▼</span>
+      </div>
+      <div class="info-box-content">
+        <p><strong>Pros:</strong></p>
+        <ul>
+          <li>Extends your reach beyond radio range</li>
+          <li>Messages bridge to distant mesh nodes</li>
+          <li>Useful when traveling or in areas with poor mesh coverage</li>
+        </ul>
+        <p><strong>Cons:</strong></p>
+        <ul>
+          <li>Messages pass through an internet server</li>
+          <li>Requires WiFi on your device (not all devices have it)</li>
+          <li>Adds latency and complexity</li>
+        </ul>
+        <p>
+          <strong>For most users:</strong> Leave MQTT disabled unless you have
+          a specific need. The mesh works great without it.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"><span class="node">◉</span></div>
+
+    <!-- Modem Presets -->
+    <h2>📡 Radio Presets</h2>
+
+    <p>Different speed/range tradeoffs:</p>
+
+    <div class="config-display">
+      <div class="config-item">
+        <span class="config-key">SHORT_FAST</span>
+        <span class="config-value">Fastest, shortest range</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">SHORT_SLOW</span>
+        <span class="config-value">Moderate speed/range</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">MEDIUM_FAST</span>
+        <span class="config-value">Good balance (Nodeville default)</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">MEDIUM_SLOW</span>
+        <span class="config-value">Better range, slower</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">LONG_FAST</span>
+        <span class="config-value">Long range</span>
+      </div>
+      <div class="config-item">
+        <span class="config-key">LONG_SLOW</span>
+        <span class="config-value">Maximum range, slowest</span>
+      </div>
+    </div>
+
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-content">
+        <p>
+          <strong>Don't change this unless you know what you're doing.</strong>
+          All devices on the mesh need to use the same preset to communicate.
+          Nodeville uses MEDIUM_FAST.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/setup/">Setup Guide</a>
+      <a href="https://meshtastic.org/docs" target="_blank" rel="noopener">Full Docs</a>
+    </div>
+    <p class="footer-text">
+      ◉───◉───◉───◉ Messages find a way.
+    </p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

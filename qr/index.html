@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan to Join - NODEVILLE</title>
+  <meta name="description" content="Scan this QR code to join the Nashville mesh network.">
+  <meta name="theme-color" content="#E85D04">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+  <style>
+    /* Full page QR specific styles */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .qr-fullpage {
+      flex: 1;
+    }
+    .qr-fullpage .qr-container {
+      padding: 2rem;
+    }
+    .qr-fullpage canvas {
+      width: 300px !important;
+      height: 300px !important;
+    }
+    @media (min-width: 768px) {
+      .qr-fullpage canvas {
+        width: 400px !important;
+        height: 400px !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="qr-fullpage">
+    <pre class="node-pattern" aria-hidden="true" style="margin-bottom: 1rem;">  ◉───◉
+ ╱     ╲
+◉       ◉
+ ╲     ╱
+  ◉───◉</pre>
+
+    <h1 class="site-logo" style="font-size: 2.5rem;">N<span class="node">◉</span>DEVILLE</h1>
+
+    <p style="font-size: 1.25rem; color: var(--color-text-secondary); margin-bottom: 2rem;">
+      Scan to join the network
+    </p>
+
+    <div class="qr-container">
+      <canvas id="fullpage-qr" data-qr="network" data-size="400"></canvas>
+    </div>
+
+    <p style="margin-top: 2rem;">
+      <a href="/setup/" style="color: var(--color-primary);">Need help? → nodeville.net/setup</a>
+    </p>
+  </div>
+
+  <script src="/js/qr-generator.js"></script>
+</body>
+</html>

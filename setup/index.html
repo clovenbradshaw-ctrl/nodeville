@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup - NODEVILLE</title>
+  <meta name="description" content="Connect your Meshtastic device to the Nashville mesh network.">
+  <meta name="theme-color" content="#E85D04">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
+</head>
+<body>
+
+  <main class="container">
+    <a href="/" class="back-link">← Back to home</a>
+
+    <div class="wizard">
+      <!-- Progress Bar -->
+      <div class="wizard-progress">
+        <div class="wizard-step active"><span>1</span></div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step"><span>2</span></div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step"><span>3</span></div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step"><span>4</span></div>
+        <div class="wizard-connector"></div>
+        <div class="wizard-step"><span>5</span></div>
+      </div>
+
+      <!-- Step 1: Install App -->
+      <div class="step-content active" id="step-1">
+        <div class="step-header">
+          <span class="step-indicator">Step 1 of 5</span>
+          <span class="icon">📱</span>
+          <h1>Install the App</h1>
+        </div>
+
+        <p>
+          The Meshtastic app connects your phone to your device via Bluetooth.
+          Download it for your platform:
+        </p>
+
+        <div class="app-badges">
+          <a href="https://apps.apple.com/app/meshtastic/id1586432531"
+             class="app-badge" target="_blank" rel="noopener">
+            <span class="store-icon"></span>
+            <div>
+              <span class="store-text">Download on the</span>
+              <span class="store-name">App Store</span>
+            </div>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.geeksville.mesh"
+             class="app-badge" target="_blank" rel="noopener">
+            <span class="store-icon">▶️</span>
+            <div>
+              <span class="store-text">Get it on</span>
+              <span class="store-name">Google Play</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-header">
+            <span class="info-box-title">🤔 Why do I need an app?</span>
+            <span class="info-box-toggle">▼</span>
+          </div>
+          <div class="info-box-content">
+            <p>
+              Your Meshtastic device is just a radio — it has no screen for typing messages.
+              The app connects via Bluetooth and gives you a messaging interface.
+            </p>
+            <p>
+              <strong>Think of it like how AirPods need your phone to play music.</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <span></span>
+          <button class="btn btn-primary" data-wizard-next>Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Pair Device -->
+      <div class="step-content" id="step-2">
+        <div class="step-header">
+          <span class="step-indicator">Step 2 of 5</span>
+          <span class="icon">🔌</span>
+          <h1>Power On & Pair</h1>
+        </div>
+
+        <div class="instructions">
+          <ol>
+            <li>Charge your device (magnetic cable for T1000-E, USB-C for others)</li>
+            <li>Power on: <strong>Hold button for 5 seconds</strong> until you hear a melody</li>
+            <li>Open the Meshtastic app on your phone</li>
+            <li>Go to <code>Settings → Connections → Bluetooth</code></li>
+            <li>Select your device from the list</li>
+            <li>Enter PIN: <code>123456</code></li>
+          </ol>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-header">
+            <span class="info-box-title">❌ Troubleshooting</span>
+            <span class="info-box-toggle">▼</span>
+          </div>
+          <div class="info-box-content">
+            <div class="troubleshooting">
+              <div class="troubleshoot-item">
+                <div class="troubleshoot-problem">Device not showing up?</div>
+                <div class="troubleshoot-solution">
+                  Make sure Bluetooth is enabled on your phone. Bring the device within
+                  a few feet. Try restarting the device (hold button 10 sec).
+                </div>
+              </div>
+              <div class="troubleshoot-item">
+                <div class="troubleshoot-problem">Solid green light on T1000-E?</div>
+                <div class="troubleshoot-solution">
+                  That's firmware update mode. Disconnect charger and restart the device.
+                </div>
+              </div>
+              <div class="troubleshoot-item">
+                <div class="troubleshoot-problem">Wrong PIN?</div>
+                <div class="troubleshoot-solution">
+                  Default is <code>123456</code> for most devices.
+                  We'll change this in Step 5 for security.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" data-wizard-back>← Back</button>
+          <button class="btn btn-primary" data-wizard-next>Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Join Network -->
+      <div class="step-content" id="step-3">
+        <div class="step-header">
+          <span class="step-indicator">Step 3 of 5</span>
+          <span class="icon">📡</span>
+          <h1>Join the Network</h1>
+        </div>
+
+        <p>
+          Scan this QR code with the Meshtastic app to configure your device
+          for the Nashville network.
+        </p>
+
+        <div class="qr-wrapper">
+          <div class="qr-container">
+            <canvas id="network-qr" data-qr="network" data-size="256"></canvas>
+          </div>
+        </div>
+
+        <p style="text-align: center;">Or open this link on your phone:</p>
+
+        <div class="copy-group">
+          <code id="network-url" data-network-url>Loading...</code>
+          <button class="copy-btn" data-copy-target="network-url">📋 Copy</button>
+        </div>
+
+        <div class="instructions">
+          <ol>
+            <li>In the Meshtastic app, tap the <strong>QR icon</strong> (or go to Settings → Channels)</li>
+            <li>Tap <strong>"Scan QR Code"</strong></li>
+            <li>Point camera at the code above</li>
+            <li>When prompted, choose <strong>"Replace All Channels"</strong></li>
+            <li>Wait for device to reboot (~10 seconds)</li>
+          </ol>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-header">
+            <span class="info-box-title">🔧 What this configures</span>
+            <span class="info-box-toggle">▼</span>
+          </div>
+          <div class="info-box-content">
+            <div class="config-display">
+              <div class="config-item">
+                <span class="config-key">Region</span>
+                <span class="config-value">US (legal frequencies)</span>
+              </div>
+              <div class="config-item">
+                <span class="config-key">Speed</span>
+                <span class="config-value">Medium Fast</span>
+              </div>
+              <div class="config-item">
+                <span class="config-key">Hop Limit</span>
+                <span class="config-value">6 (relays up to 6 times)</span>
+              </div>
+              <div class="config-item">
+                <span class="config-key">Primary Channel</span>
+                <span class="config-value">Nashville public mesh</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" data-wizard-back>← Back</button>
+          <button class="btn btn-primary" data-wizard-next>Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Set Name -->
+      <div class="step-content" id="step-4">
+        <div class="step-header">
+          <span class="step-indicator">Step 4 of 5</span>
+          <span class="icon">👤</span>
+          <h1>Set Your Name</h1>
+        </div>
+
+        <p>This is how you appear to others on the mesh.</p>
+
+        <div class="instructions">
+          <ol>
+            <li>Go to <code>Settings → User</code></li>
+            <li>Set <strong>Long Name</strong>: Your display name (e.g., "Sarah M")</li>
+            <li>Set <strong>Short Name</strong>: 4 characters max (e.g., "SARA")</li>
+            <li>Tap <strong>Save</strong></li>
+          </ol>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-header">
+            <span class="info-box-title">💡 Tips</span>
+            <span class="info-box-toggle">▼</span>
+          </div>
+          <div class="info-box-content">
+            <ul>
+              <li><strong>Long Name:</strong> Use something recognizable to friends</li>
+              <li><strong>Short Name:</strong> Shows on devices with small screens</li>
+              <li>You can change these anytime</li>
+              <li>Emoji work in names! 🌿</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" data-wizard-back>← Back</button>
+          <button class="btn btn-primary" data-wizard-next>Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Secure PIN -->
+      <div class="step-content" id="step-5">
+        <div class="step-header">
+          <span class="step-indicator">Step 5 of 5</span>
+          <span class="icon">🔐</span>
+          <h1>Secure Your Device</h1>
+        </div>
+
+        <div class="alert alert-warning">
+          <span class="alert-icon">⚠️</span>
+          <div class="alert-content">
+            <p>
+              <strong>The default Bluetooth PIN (123456) is public.</strong>
+              Anyone nearby could connect to your device. Change it now.
+            </p>
+          </div>
+        </div>
+
+        <div class="instructions">
+          <ol>
+            <li>Go to <code>Settings → Radio Config → Bluetooth</code></li>
+            <li>Tap <strong>"Fixed PIN"</strong></li>
+            <li>Enter a new 6-digit PIN (something you'll remember)</li>
+            <li>Tap <strong>Save</strong></li>
+            <li>Device will reboot</li>
+          </ol>
+        </div>
+
+        <div class="alert alert-info">
+          <span class="alert-icon">📝</span>
+          <div class="alert-content">
+            <p>
+              <strong>Write down your PIN somewhere safe.</strong>
+              You'll need it if you re-pair or use a new phone.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-box-header">
+            <span class="info-box-title">🤔 Why does this matter?</span>
+            <span class="info-box-toggle">▼</span>
+          </div>
+          <div class="info-box-content">
+            <p>Anyone within ~30 feet with the Meshtastic app could:</p>
+            <ul>
+              <li>Connect to your device</li>
+              <li>Read your messages</li>
+              <li>Change your settings</li>
+              <li>Send messages as you</li>
+            </ul>
+            <p><strong>A custom PIN prevents this.</strong></p>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" data-wizard-back>← Back</button>
+          <button class="btn btn-primary" data-wizard-next>Complete Setup →</button>
+        </div>
+      </div>
+
+      <!-- Complete Screen -->
+      <div class="step-content" id="step-complete">
+        <div class="success-state">
+          <div class="success-icon">✓</div>
+          <h2>You're on the mesh!</h2>
+          <p>
+            Your device is configured and connected to Nodeville.
+          </p>
+        </div>
+
+        <div class="config-display">
+          <div class="config-item">
+            <span class="config-key">📡 Public channel</span>
+            <span class="config-value">Active</span>
+          </div>
+          <div class="config-item">
+            <span class="config-key">🔐 Bluetooth</span>
+            <span class="config-value">Secured</span>
+          </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 2rem;">
+          Anyone on the mesh can see messages on the public channel.
+          For private conversations, create encrypted channels.
+        </p>
+
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="/encrypt/" class="btn btn-primary">Create Encrypted Chat →</a>
+        </div>
+
+        <div class="divider"><span class="node">◉</span></div>
+
+        <div class="nav-cards">
+          <a href="/advanced/" class="nav-card">
+            <span class="icon">⚙️</span>
+            <span class="title">Advanced settings</span>
+            <span class="subtitle">Battery optimization, privacy, MQTT</span>
+            <span class="meta">
+              <span class="arrow">→</span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-text">
+      ◉───◉───◉───◉ Messages find a way.
+    </p>
+  </footer>
+
+  <script src="/js/qr-generator.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
